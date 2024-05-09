@@ -1,7 +1,6 @@
-package common.core.base.objects
+package core.objects
 
-import common.core.base.models.Fuel
-import common.core.base.models.Oxidant
+import core.models.Fuel
 
 object Fuels {
 
@@ -37,22 +36,10 @@ object Fuels {
         fuelDensity = 808.0,
         burningPoint = 3360.0,
         gasConstant = 380.0,
-        adiabaticValue = 2.8,
+        adiabaticValue = 1.23,
         standardSpecificGravity = 268.0
     )
-
-
 }
 
-object Oxidants {
 
-    val LiquidOxygen = Oxidant(
-        name = "Жидкий кислород"
-    )
-
-    val NitrousOxide = Oxidant(
-        name = "Четырехокись азота"
-    )
-
-}
 

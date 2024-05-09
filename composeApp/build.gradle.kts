@@ -1,4 +1,5 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -14,12 +15,17 @@ kotlin {
             }
         }
     }
-    
+    mingwX64("native") { // on macOS
+        binaries {
+            executable()
+        }
+    }
+
     jvm("desktop")
-    
+
     sourceSets {
         val desktopMain by getting
-        
+
         androidMain.dependencies {
             implementation(libs.compose.ui.tooling.preview)
             implementation(libs.androidx.activity.compose)
@@ -32,11 +38,20 @@ kotlin {
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
             implementation(libs.commons.math3)
+
+            // Koin
+            implementation("io.insert-koin:koin-core:3.2.0")
+            implementation("io.insert-koin:koin-test:3.2.0")
+            implementation("io.insert-koin:koin-android:3.2.0")
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
         }
     }
+}
+
+tasks.withType<KotlinCompile> {
+    kotlinOptions.jvmTarget = "11"
 }
 
 android {
@@ -84,6 +99,14 @@ compose.desktop {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "org.kapozzz.rpw"
             packageVersion = "1.0.0"
+            windows {
+                // a version for all Windows distributables
+                packageVersion = "1.0.0"
+                // a version only for the msi package
+                msiPackageVersion = "1.0.0"
+                // a version only for the exe package
+                exePackageVersion = "1.0.0"
+            }
         }
     }
 }

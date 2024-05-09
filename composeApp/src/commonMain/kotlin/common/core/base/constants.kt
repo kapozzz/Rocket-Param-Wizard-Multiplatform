@@ -1,6 +1,0 @@
-package common.core.base
-
-const val FREE_FALL_ACCELERATION = 9.81
-const val ATMOSPHERIC_PRESSURE_IN_BARS = 1.01
-const val ATMOSPHERIC_PRESSURE_IN_PASCAL = 101325
-const val STAGES_COUNT = 2.0

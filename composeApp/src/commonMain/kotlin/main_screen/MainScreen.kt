@@ -1,4 +1,4 @@
-package common.main_screen
+package main_screen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -9,10 +9,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import common.core.base.models.ProjectParams
-import common.core.presentation.FuelPicker
-import common.core.presentation.Head
-import common.core.presentation.ParametersPicker
+import core.models.ProjectParams
+import common.presentation.FuelPicker
+import common.presentation.Head
+import common.presentation.ParametersPicker
 
 @Composable
 fun MainScreen(

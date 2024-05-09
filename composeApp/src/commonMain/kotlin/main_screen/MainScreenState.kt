@@ -1,10 +1,10 @@
-package common.main_screen
+package main_screen
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import common.core.base.models.Fuel
-import common.core.base.models.ProjectParams
-import common.core.base.objects.Fuels
+import core.models.Fuel
+import core.models.ProjectParams
+import core.objects.Fuels
 
 data class MainScreenState(
     val fuel: MutableState<Fuel> = mutableStateOf(Fuels.Paraffin),

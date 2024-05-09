@@ -1,4 +1,4 @@
-package common.core.base.models
+package core.models
 
 /**
 Топливо:
@@ -32,23 +32,12 @@ data class Fuel(
     val adiabaticValue: Double,
     val standardSpecificGravity: Double
 ) {
-
     /**
      * Средняя плотность жидкого топлива
      */
     val middleLiquidFuelDensity: Double
         get() = ((1 + K) * oxidantDensity * fuelDensity) /
                 (oxidantDensity + (K * fuelDensity))
-
 }
 
-/**
-Окислитель:
 
-name - название.
-
- */
-
-data class Oxidant(
-    val name: String
-)

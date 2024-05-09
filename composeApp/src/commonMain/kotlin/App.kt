@@ -7,12 +7,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import common.core.base.models.ProjectParams
-import common.core.base.solvers.DeterminationOfEngineEfficiencyIndicators
-import common.main_screen.CurrentScreen
-import common.main_screen.MainScreen
-import common.main_screen.MainScreenState
+import core.models.ProjectParams
+import core.solvers.DeterminationOfEngineEfficiencyIndicators
+import main_screen.CurrentScreen
+import main_screen.MainScreen
+import main_screen.MainScreenState
 import common.ui.theme.AppCommonTheme
+import core.solvers.DesignBallisticCalculation
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 
@@ -26,6 +27,7 @@ fun App() {
     val currentScreen = remember {
         mutableStateOf<CurrentScreen>(CurrentScreen.Main)
     }
+//    state.value.projectParams.value = ProjectParams.getDefault()
     AppCommonTheme {
         Box(
             modifier = Modifier.fillMaxSize(),
@@ -55,29 +57,56 @@ fun ResultsScreen(
     projectParams: ProjectParams,
 ) {
 
-    val solve = DeterminationOfEngineEfficiencyIndicators(projectParams)
+    val firstSolve = DeterminationOfEngineEfficiencyIndicators(projectParams)
+    val secondSolve = DesignBallisticCalculation(projectParams)
 
     Column {
+        Text("Первый шаг:")
         Text(
-            text = solve.specificGravityCalculatedFirst.toString()
+            text = "Удальная тяга 1:" + firstSolve.specificGravityCalculatedFirst.toString()
         )
         Text(
-            text = solve.specificGravityCalculatedSecond.toString()
+            text = "Удельная тяга 2:" + firstSolve.specificGravityCalculatedSecond.toString()
         )
         Text(
-            text = solve.specificGravityInVoidFirst.toString()
+            text = "Удельная тяга в пустоте 1:" + firstSolve.specificGravityInVoidFirst.toString()
         )
         Text(
-            text = solve.specificGravityInVoidSecond.toString()
+            text = "Удельная тяга в пустоте 2:" + firstSolve.specificGravityInVoidSecond.toString()
         )
         Text(
-            text = solve.specificGravityOnStartFromEarth.toString()
+            text = "Удельная тяга при старте:" + firstSolve.specificGravityOnStartFromEarth.toString()
         )
         Text(
-            text = solve.middleSpecificGravity.toString()
+            text = "Средняя удельная тяга:" + firstSolve.middleSpecificGravity.toString()
         )
         Text(
-            text = solve.firstStageThrustCapacityInVoid.toString()
+            text = "Тяговооруженность при старте 1:" + firstSolve.firstStageThrustCapacityInVoid.toString()
+        )
+        Text("Второй шаг:")
+        Text(
+            text = "Центральный угол:" + secondSolve.centralAngle
+        )
+        Text(
+            text = "Безразмерная скорость в конце полёта:" + secondSolve.dimensionlessVelocityOnFinishActiveFly.toString()
+        )
+        Text(
+            text = "Скорость в конце полёта:" + secondSolve.velocityOnFinishActiveFly
+        )
+        Text(
+            text = "Коэффициент заполнения топливом первой ступени:" + secondSolve.reducedPropellantFillFactorForFirstStage
+        )
+        Text(
+            text = "Коэффициент заполнения топливом второй ступени:" + secondSolve.reducedPropellantFillFactorForSecondStage
+        )
+        Text(
+            text = "Приведенный коэффициент заполнения ракеты топливом:" + secondSolve.reducedPropellantFillFactor
+        )
+        Text(
+            text = "Скорость продуктов истечения:" + secondSolve.fuelFlowRate
+        )
+        Text(
+            text = "Идеальная скорость:" + secondSolve.greatVelocity
         )
     }
 }

@@ -1,4 +1,4 @@
-package common.core.presentation
+package common.presentation
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -24,7 +24,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import common.core.base.models.ProjectParams
+import core.models.ProjectParams
 import common.ui.theme.LocalTheme
 
 private data class StringParams(

@@ -1,7 +1,6 @@
-package common.core.base.models
+package core.models
 
-import common.core.base.objects.Fuels
-import java.lang.Math.pow
+import core.objects.Fuels
 
 /**
  *  Проектные параметры:
@@ -43,7 +42,7 @@ data class ProjectParams(
             fuel = Fuels.Dimethylhydrazine,
             initialThrustCapacityOfTheRocket = 0.58 to 0.76,
             pressureInTheCombustionChambersOfEngines = 112.0 to 98.0,
-            maxFlyDistance = 90000.0,
+            maxFlyDistance = 9000000.0,
             payloadWeight = 6000.0,
             engineNozzleShearPressure = 0.575 to 0.15,
             theRatioOfTheRelativeFuelWeightsOfTheStages = 1.25,

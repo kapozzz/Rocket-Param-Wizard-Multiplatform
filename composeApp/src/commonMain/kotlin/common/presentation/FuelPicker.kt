@@ -1,4 +1,4 @@
-package common.core.presentation
+package common.presentation
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.FastOutSlowInEasing
@@ -20,8 +20,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import common.core.base.models.Fuel
-import common.core.base.objects.Fuels
+import core.models.Fuel
+import core.objects.Fuels
 import common.ui.theme.LocalTheme
 
 @Composable

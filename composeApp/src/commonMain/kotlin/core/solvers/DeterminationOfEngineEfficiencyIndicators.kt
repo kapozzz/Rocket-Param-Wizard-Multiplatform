@@ -1,10 +1,9 @@
-package common.core.base.solvers
+package core.solvers
 
-import common.core.base.ATMOSPHERIC_PRESSURE_IN_BARS
-import common.core.base.FREE_FALL_ACCELERATION
-import common.core.base.STAGES_COUNT
-import common.core.base.models.ProjectParams
+import core.models.ProjectParams
+import core.objects.Constants
 import java.lang.Math.pow
+import kotlin.math.pow
 
 class DeterminationOfEngineEfficiencyIndicators(
     private val projectParams: ProjectParams
@@ -18,9 +17,9 @@ class DeterminationOfEngineEfficiencyIndicators(
             0.95 * fuel.standardSpecificGravity +
                     21.0 +
                     0.76 * pressureInTheCombustionChambersOfEngines.first -
-                    0.003 * pow(pressureInTheCombustionChambersOfEngines.first, 2.0) -
+                    0.003 * pressureInTheCombustionChambersOfEngines.first.pow(2.0) -
                     70.0 * engineNozzleShearPressure.first +
-                    25.0 * pow(engineNozzleShearPressure.first, 2.0)
+                    25.0 * engineNozzleShearPressure.first.pow(2.0)
         }
     }
 
@@ -32,9 +31,9 @@ class DeterminationOfEngineEfficiencyIndicators(
             0.95 * fuel.standardSpecificGravity +
                     21.0 +
                     0.76 * pressureInTheCombustionChambersOfEngines.second -
-                    0.003 * pow(pressureInTheCombustionChambersOfEngines.second, 2.0) -
+                    0.003 * pressureInTheCombustionChambersOfEngines.second.pow(2.0) -
                     70.0 * engineNozzleShearPressure.second +
-                    25.0 * pow(engineNozzleShearPressure.second, 2.0)
+                    25.0 * engineNozzleShearPressure.second.pow(2.0)
         }
     }
 
@@ -46,9 +45,8 @@ class DeterminationOfEngineEfficiencyIndicators(
         with(projectParams) {
             specificGravityCalculatedFirst +
                     (((fuel.gasConstant * fuel.burningPoint) /
-                            (specificGravityCalculatedFirst * pow(FREE_FALL_ACCELERATION, 2.0))) *
-                            pow(
-                                engineNozzleShearPressure.first / pressureInTheCombustionChambersOfEngines.first,
+                            (specificGravityCalculatedFirst * Constants.FREE_FALL_ACCELERATION.pow(2.0))) *
+                            (engineNozzleShearPressure.first / pressureInTheCombustionChambersOfEngines.first).pow(
                                 (fuel.adiabaticValue - 1.0) / fuel.adiabaticValue
                             ))
         }
@@ -61,9 +59,8 @@ class DeterminationOfEngineEfficiencyIndicators(
         with(projectParams) {
             specificGravityCalculatedSecond +
                     (((fuel.gasConstant * fuel.burningPoint) /
-                            (specificGravityCalculatedSecond * pow(FREE_FALL_ACCELERATION, 2.0))) *
-                            pow(
-                                engineNozzleShearPressure.second / pressureInTheCombustionChambersOfEngines.second,
+                            (specificGravityCalculatedSecond * Constants.FREE_FALL_ACCELERATION.pow(2.0))) *
+                            (engineNozzleShearPressure.second / pressureInTheCombustionChambersOfEngines.second).pow(
                                 (fuel.adiabaticValue - 1.0) / fuel.adiabaticValue
                             ))
         }
@@ -76,11 +73,10 @@ class DeterminationOfEngineEfficiencyIndicators(
         with(projectParams) {
             specificGravityInVoidFirst -
                     (((fuel.gasConstant * fuel.burningPoint) /
-                            (specificGravityCalculatedFirst * pow(FREE_FALL_ACCELERATION, 2.0))) *
-                            pow(
-                                engineNozzleShearPressure.first / pressureInTheCombustionChambersOfEngines.first,
+                            (specificGravityCalculatedFirst * Constants.FREE_FALL_ACCELERATION.pow(2.0))) *
+                            (engineNozzleShearPressure.first / pressureInTheCombustionChambersOfEngines.first).pow(
                                 (fuel.adiabaticValue - 1.0) / fuel.adiabaticValue
-                            ) * (ATMOSPHERIC_PRESSURE_IN_BARS / engineNozzleShearPressure.first))
+                            ) * (Constants.ATMOSPHERIC_PRESSURE_IN_BARS / engineNozzleShearPressure.first))
         }
     }
 
@@ -88,7 +84,7 @@ class DeterminationOfEngineEfficiencyIndicators(
      * Средняя удельная тяга
      */
     val middleSpecificGravity by lazy {
-        (1.0 / ((2.0 * STAGES_COUNT) - 1.0)) *
+        (1.0 / ((2.0 * Constants.STAGES_COUNT) - 1.0)) *
                 (((specificGravityOnStartFromEarth + specificGravityInVoidFirst) / 2.0) +
                         (2.0 * (specificGravityInVoidFirst + specificGravityInVoidSecond)))
     }
