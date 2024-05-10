@@ -38,11 +38,7 @@ kotlin {
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
             implementation(libs.commons.math3)
-
-            // Koin
-            implementation("io.insert-koin:koin-core:3.2.0")
-            implementation("io.insert-koin:koin-test:3.2.0")
-            implementation("io.insert-koin:koin-android:3.2.0")
+            implementation("org.jetbrains.androidx.navigation:navigation-compose:2.7.0-alpha03")
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
@@ -88,7 +84,7 @@ android {
     }
 }
 dependencies {
-    implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.navigation.runtime.ktx)
 }
 
 compose.desktop {

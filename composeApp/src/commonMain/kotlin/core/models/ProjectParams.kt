@@ -26,7 +26,6 @@ import core.objects.Fuels
  */
 
 data class ProjectParams(
-    val fuel: Fuel,
     val maxFlyDistance: Double,
     val payloadWeight: Double,
     val initialThrustCapacityOfTheRocket: Pair<Double, Double>,
@@ -39,7 +38,6 @@ data class ProjectParams(
 
     companion object {
         fun getDefault(): ProjectParams = ProjectParams(
-            fuel = Fuels.Dimethylhydrazine,
             initialThrustCapacityOfTheRocket = 0.58 to 0.76,
             pressureInTheCombustionChambersOfEngines = 112.0 to 98.0,
             maxFlyDistance = 9000000.0,

@@ -16,6 +16,8 @@ compose-plugin = "1.6.2"
 junit = "4.13.2"
 kotlin = "1.9.23"
 navigationCompose = "2.7.7"
+coreAnimation = "1.0.0"
+navigationRuntimeKtx = "2.7.7"
 
 [libraries]
 commons-math3 = { module = "org.apache.commons:commons-math3", version.ref = "commonsMath3" }
@@ -32,6 +34,8 @@ androidx-activity-compose = { module = "androidx.activity:activity-compose", ver
 compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "compose" }
 compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "compose" }
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
+androidx-core-animation = { group = "androidx.core", name = "core-animation", version.ref = "coreAnimation" }
+androidx-navigation-runtime-ktx = { group = "androidx.navigation", name = "navigation-runtime-ktx", version.ref = "navigationRuntimeKtx" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

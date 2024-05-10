@@ -1,7 +1,9 @@
 package core.solvers
 
+import core.models.Fuel
 import core.models.ProjectParams
 import core.objects.Constants
+import kotlin.math.PI
 import kotlin.math.exp
 import kotlin.math.ln
 import kotlin.math.pow
@@ -26,30 +28,64 @@ data class DependenciesParametersColumn(
 )
 
 class DesignBallisticCalculation(
-    private val projectParams: ProjectParams
+    private val projectParams: ProjectParams,
+    private val fuel: Fuel,
+    private val determinationOfEngineEfficiencyIndicators: DeterminationOfEngineEfficiencyIndicators = DeterminationOfEngineEfficiencyIndicators(
+        projectParams = projectParams,
+        fuel = fuel
+    ),
+    private val definedFillFactor: Double? = null
 ) {
 
     val dependenciesParameters: DependenciesParametersColumn =
         DependenciesParameters.getParameters(projectParams.maxFlyDistance)
 
     /**
+     * Поправочный коэффициент
+     */
+    val definedCoefficient by lazy {
+        projectParams.initialThrustCapacityOfTheRocket.second / 0.5
+    }
+
+    /**
+     * Уточненное lCoord
+     */
+    val definedLCoord by lazy {
+        definedCoefficient * dependenciesParameters.lCoord
+    }
+
+    /**
+     * Уточненное hCoord
+     */
+    val definedhCoord by lazy {
+        definedCoefficient * dependenciesParameters.hCoord
+    }
+
+    /**
      * Центральный угол
      */
     val centralAngle by lazy {
-        (projectParams.maxFlyDistance - dependenciesParameters.lCoord) / Constants.EARTH_RADIUS
+        (projectParams.maxFlyDistance - definedLCoord) / Constants.EARTH_RADIUS
+    }
+
+    /**
+     * Угол в радианах
+     */
+    val angleInRadians by lazy {
+        dependenciesParameters.angle * PI / 180
     }
 
     /**
      * Безразмерная скорость в конце активного участка полета
      */
     val dimensionlessVelocityOnFinishActiveFly by lazy {
-        (2 * Constants.EARTH_RADIUS * (1 + tan(dependenciesParameters.angle).pow(2)) * tan(
+        (2 * Constants.EARTH_RADIUS * (1 + tan(angleInRadians).pow(2)) * tan(
             centralAngle / 2
-        ).pow(2)) / ((((2 * Constants.EARTH_RADIUS) + dependenciesParameters.hCoord) * tan(
+        ).pow(2)) / ((((2 * Constants.EARTH_RADIUS) + definedhCoord) * tan(
             centralAngle / 2
         ).pow(
             2
-        )) + ((2 * Constants.EARTH_RADIUS) * tan(dependenciesParameters.angle) * tan(centralAngle / 2)) + dependenciesParameters.hCoord)
+        )) + ((2 * Constants.EARTH_RADIUS) * tan(angleInRadians) * tan(centralAngle / 2)) + definedhCoord)
     }
 
     /**
@@ -58,7 +94,7 @@ class DesignBallisticCalculation(
     val velocityOnFinishActiveFly by lazy {
         sqrt(
             (Constants.GRAVITY_CONSTANT * Constants.EARTH_WEIGHT * dimensionlessVelocityOnFinishActiveFly)
-                    / (Constants.EARTH_RADIUS + dependenciesParameters.hCoord)
+                    / (Constants.EARTH_RADIUS + definedhCoord)
         )
     }
 
@@ -66,14 +102,16 @@ class DesignBallisticCalculation(
      * Скорость истечения топлива
      */
     val fuelFlowRate by lazy {
-        Constants.FREE_FALL_ACCELERATION * projectParams.fuel.standardSpecificGravity
+        Constants.FREE_FALL_ACCELERATION * determinationOfEngineEfficiencyIndicators.middleSpecificGravity
     }
 
+    // TODO не приведённое значение
     /**
      * Коэффициент заполнения ракеты топливом
      */
     val reducedPropellantFillFactor by lazy {
-        1 - exp(-1 * ((Constants.VELOCITY_LESS_COEFFICIENT * velocityOnFinishActiveFly) / (Constants.FREE_FALL_ACCELERATION * projectParams.fuel.standardSpecificGravity)))
+        definedFillFactor
+            ?: (1 - exp(-1 * ((Constants.VELOCITY_LESS_COEFFICIENT * velocityOnFinishActiveFly) / (Constants.FREE_FALL_ACCELERATION * determinationOfEngineEfficiencyIndicators.middleSpecificGravity))))
     }
 
     /**

@@ -43,6 +43,11 @@ object Constants {
      */
     val GRAVITY_CONSTANT = 6.67 * 10.0.pow(-11)
 
+    /**
+     * Эталонная начальная поперечная нагрузка на мидель ракеты
+     */
+    val GREAT_MID_LOAD = 12.0 * 10.0.pow(3)
+
 }
 
 

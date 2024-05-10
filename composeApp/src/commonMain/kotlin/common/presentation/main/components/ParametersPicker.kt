@@ -1,4 +1,4 @@
-package common.presentation
+package common.presentation.main.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -229,7 +229,7 @@ fun ParametersPicker(
 }
 
 @Composable
-private fun ParamsField(
+fun ParamsField(
     name: String,
     param: String,
     onParamChange: (param: String) -> Unit,

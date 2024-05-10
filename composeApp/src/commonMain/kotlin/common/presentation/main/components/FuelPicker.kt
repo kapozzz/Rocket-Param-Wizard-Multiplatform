@@ -1,4 +1,4 @@
-package common.presentation
+package common.presentation.main.components
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.FastOutSlowInEasing

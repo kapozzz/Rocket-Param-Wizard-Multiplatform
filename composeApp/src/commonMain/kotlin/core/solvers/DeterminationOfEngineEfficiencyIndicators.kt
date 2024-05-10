@@ -1,12 +1,13 @@
 package core.solvers
 
+import core.models.Fuel
 import core.models.ProjectParams
 import core.objects.Constants
-import java.lang.Math.pow
 import kotlin.math.pow
 
 class DeterminationOfEngineEfficiencyIndicators(
-    private val projectParams: ProjectParams
+    private val projectParams: ProjectParams,
+    private val fuel: Fuel
 ) {
 
     /**
@@ -45,7 +46,9 @@ class DeterminationOfEngineEfficiencyIndicators(
         with(projectParams) {
             specificGravityCalculatedFirst +
                     (((fuel.gasConstant * fuel.burningPoint) /
-                            (specificGravityCalculatedFirst * Constants.FREE_FALL_ACCELERATION.pow(2.0))) *
+                            (specificGravityCalculatedFirst * Constants.FREE_FALL_ACCELERATION.pow(
+                                2.0
+                            ))) *
                             (engineNozzleShearPressure.first / pressureInTheCombustionChambersOfEngines.first).pow(
                                 (fuel.adiabaticValue - 1.0) / fuel.adiabaticValue
                             ))
@@ -59,7 +62,9 @@ class DeterminationOfEngineEfficiencyIndicators(
         with(projectParams) {
             specificGravityCalculatedSecond +
                     (((fuel.gasConstant * fuel.burningPoint) /
-                            (specificGravityCalculatedSecond * Constants.FREE_FALL_ACCELERATION.pow(2.0))) *
+                            (specificGravityCalculatedSecond * Constants.FREE_FALL_ACCELERATION.pow(
+                                2.0
+                            ))) *
                             (engineNozzleShearPressure.second / pressureInTheCombustionChambersOfEngines.second).pow(
                                 (fuel.adiabaticValue - 1.0) / fuel.adiabaticValue
                             ))
@@ -73,7 +78,9 @@ class DeterminationOfEngineEfficiencyIndicators(
         with(projectParams) {
             specificGravityInVoidFirst -
                     (((fuel.gasConstant * fuel.burningPoint) /
-                            (specificGravityCalculatedFirst * Constants.FREE_FALL_ACCELERATION.pow(2.0))) *
+                            (specificGravityCalculatedFirst * Constants.FREE_FALL_ACCELERATION.pow(
+                                2.0
+                            ))) *
                             (engineNozzleShearPressure.first / pressureInTheCombustionChambersOfEngines.first).pow(
                                 (fuel.adiabaticValue - 1.0) / fuel.adiabaticValue
                             ) * (Constants.ATMOSPHERIC_PRESSURE_IN_BARS / engineNozzleShearPressure.first))
@@ -86,8 +93,9 @@ class DeterminationOfEngineEfficiencyIndicators(
     val middleSpecificGravity by lazy {
         (1.0 / ((2.0 * Constants.STAGES_COUNT) - 1.0)) *
                 (((specificGravityOnStartFromEarth + specificGravityInVoidFirst) / 2.0) +
-                        (2.0 * (specificGravityInVoidFirst + specificGravityInVoidSecond)))
+                        (2.0 * specificGravityInVoidSecond))
     }
+    // here
 
     /**
      *  Тяговооруженность первой ступени

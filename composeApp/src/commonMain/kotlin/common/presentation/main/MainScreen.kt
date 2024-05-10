@@ -1,4 +1,4 @@
-package main_screen
+package common.presentation.main
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,16 +10,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import core.models.ProjectParams
-import common.presentation.FuelPicker
-import common.presentation.Head
-import common.presentation.ParametersPicker
+import common.presentation.main.components.FuelPicker
+import common.presentation.main.components.Head
+import common.presentation.main.components.ParametersPicker
+import common.presentation.util.ParamsHandler
+import common.ui.theme.LocalNavigator
 
 @Composable
 fun MainScreen(
-    state: MainScreenState,
-    onComputeClick: (ProjectParams) -> Unit,
     modifier: Modifier = Modifier
 ) {
+
+    val navigator = LocalNavigator.current
+
     Column(
         modifier = modifier.width(IntrinsicSize.Min),
         verticalArrangement = Arrangement.Top,
@@ -27,9 +30,9 @@ fun MainScreen(
     ) {
         Head(modifier = Modifier.padding(top = 16.dp, bottom = 24.dp))
         FuelPicker(
-            state.fuel.value,
+            ParamsHandler.fuel.value,
             onFuelClick = { newFuel ->
-                state.fuel.value = newFuel
+                ParamsHandler.fuel.value = newFuel
             }
         )
         ParametersPicker(
@@ -39,9 +42,10 @@ fun MainScreen(
                     bottom = 16.dp
                 ),
             onParamsChange = {
-               onComputeClick(it)
+                ParamsHandler.projectParams.value = it
+                navigator.navigate(CurrentScreen.Determination.route)
             },
-            projectParams = state.projectParams.value
+            projectParams = ParamsHandler.projectParams.value
         )
     }
 }
