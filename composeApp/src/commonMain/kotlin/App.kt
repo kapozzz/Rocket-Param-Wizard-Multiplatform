@@ -11,6 +11,7 @@ import common.presentation.determination.DeterminationScreen
 import common.presentation.main.CurrentScreen
 import common.presentation.main.MainScreen
 import common.presentation.undefined_design.UndefinedDesignScreen
+import common.presentation.undefined_verification.UndefinedVerificationScreen
 import common.ui.theme.AppCommonTheme
 import common.ui.theme.LocalNavigator
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -28,7 +29,7 @@ fun App() {
             CompositionLocalProvider(
                 LocalNavigator provides (navController)
             ) {
-                NavHost(navController = navController, startDestination = CurrentScreen.Main.route) {
+                NavHost(navController = navController, startDestination = CurrentScreen.Determination.route) {
                     composable(CurrentScreen.Main.route) {
                         MainScreen()
                     }
@@ -37,6 +38,9 @@ fun App() {
                     }
                     composable(CurrentScreen.UndefinedDesign.route) {
                         UndefinedDesignScreen()
+                    }
+                    composable(CurrentScreen.UndefinedVerification.route) {
+                        UndefinedVerificationScreen()
                     }
                 }
             }

@@ -11,7 +11,7 @@ import core.solvers.VerificationBallisticCalculation
 
 object ParamsHandler {
     var projectParams: MutableState<ProjectParams> = mutableStateOf(ProjectParams.getDefault())
-    var fuel: MutableState<Fuel> = mutableStateOf(Fuels.Dimethylhydrazine)
+    var fuel: MutableState<Fuel> = mutableStateOf(Fuels.LiquidHydrogen)
     var determination: MutableState<DeterminationOfEngineEfficiencyIndicators?> = mutableStateOf(null)
     var undefinedDesign: MutableState<DesignBallisticCalculation?> = mutableStateOf(null)
     var definedDesign: MutableState<DesignBallisticCalculation?> = mutableStateOf(null)

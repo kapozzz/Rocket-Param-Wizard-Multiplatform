@@ -91,24 +91,3 @@ fun Design(
     }
 }
 
-@Composable
-fun Verification(
-    verification: VerificationBallisticCalculation
-) {
-    Text("Проверочный баллистический расчет:")
-    Text(
-        text = "Число Циолковского для первой ступени:" + verification.cValueFirstStage
-    )
-    Text(
-        text = "Число Циолковского для второй ступени:" + verification.cValueSecondStage
-    )
-    Text(
-        text = "Потери скорости на преодоление гравитационных сил:" + verification.velocityLessOnGravitationPowers
-    )
-    Text(
-        text = "Потери скорости на преодоление лобового сопротивления:" + verification.velocityLessOnFrontPowers
-    )
-    Text(
-        text = "Уравнение скорости в проекции на оси скоростной (поточной) системы координат после интегрирования по весу выгоревшего топлива µк1:" + verification.firstVelocityEqualization
-    )
-}

@@ -13,12 +13,8 @@ import kotlin.math.sin
 class VerificationBallisticCalculation(
     private val projectParams: ProjectParams,
     private val fuel: Fuel,
-    private val designBallisticCalculation: DesignBallisticCalculation = DesignBallisticCalculation(
-        projectParams, fuel
-    ),
-    private val determinationOfEngineEfficiencyIndicators: DeterminationOfEngineEfficiencyIndicators = DeterminationOfEngineEfficiencyIndicators(
-        projectParams, fuel
-    )
+    private val designBallisticCalculation: DesignBallisticCalculation,
+    private val determinationOfEngineEfficiencyIndicators: DeterminationOfEngineEfficiencyIndicators
 ) {
 
     /**
@@ -39,7 +35,10 @@ class VerificationBallisticCalculation(
      *  Потери скорости на преодоление гравитационных сил
      */
     val velocityLessOnGravitationPowers by lazy {
-        sin(designBallisticCalculation.angleInRadians) * designBallisticCalculation.reducedPropellantFillFactorForFirstStage
+        DependentConstants.getIg(
+            designBallisticCalculation.reducedPropellantFillFactorForFirstStage,
+            designBallisticCalculation.dependenciesParameters.angle
+        )
     }
 
     /**
@@ -49,7 +48,7 @@ class VerificationBallisticCalculation(
         (DependentConstants.getIx1(designBallisticCalculation.reducedPropellantFillFactorForFirstStage) /
                 (projectParams.initialThrustCapacityOfTheRocket.first * cbrt(
                     sin(
-                        designBallisticCalculation.dependenciesParameters.angle
+                        designBallisticCalculation.angleInRadians
                     ).pow(2)
                 ))) *
                 (Constants.GREAT_MID_LOAD / projectParams.initialTransverseLoadOnTheMidsection)
@@ -59,13 +58,14 @@ class VerificationBallisticCalculation(
      * Уравнение скорости в проекции на оси скоростной (поточной) системы координат после интегрирования по весу выгоревшего топлива µк1
      */
     val firstVelocityEqualization by lazy {
-        (Constants.FREE_FALL_ACCELERATION * determinationOfEngineEfficiencyIndicators.specificGravityInVoidFirst * cValueFirstStage) -
-                (Constants.FREE_FALL_ACCELERATION * projectParams.initialThrustCapacityOfTheRocket.first * determinationOfEngineEfficiencyIndicators.specificGravityOnStartFromEarth *
-                        DependentConstants.getIx1(designBallisticCalculation.reducedPropellantFillFactorForFirstStage)) -
-                (determinationOfEngineEfficiencyIndicators.specificGravityOnStartFromEarth * DependentConstants.getIp1(
-                    designBallisticCalculation.reducedPropellantFillFactorForFirstStage
-                )) -
-                velocityLessOnFrontPowers
+        Constants.FREE_FALL_ACCELERATION * determinationOfEngineEfficiencyIndicators.specificGravityInVoidFirst * cValueFirstStage -
+                Constants.FREE_FALL_ACCELERATION * projectParams.initialThrustCapacityOfTheRocket.first * determinationOfEngineEfficiencyIndicators.specificGravityOnStartFromEarth *
+                DependentConstants.getIg(
+                    designBallisticCalculation.reducedPropellantFillFactorForFirstStage,
+                    designBallisticCalculation.dependenciesParameters.angle
+                ) - determinationOfEngineEfficiencyIndicators.specificGravityOnStartFromEarth * DependentConstants.getIp1(
+            designBallisticCalculation.reducedPropellantFillFactorForFirstStage
+        ) - velocityLessOnFrontPowers
     }
 
 

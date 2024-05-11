@@ -10,37 +10,32 @@ fun linearInterpolate(
     targetLeft: Double,
     targetRight: Double
 ): Double {
-    require(left <= right) { "left must be less than or equal to right" }
-    require(targetLeft <= targetRight) { "targetLeft must be less than or equal to targetRight" }
-
     val ratio = (target - left) / (right - left)
-    return targetLeft + ratio * (targetRight - targetLeft)
+    return if (targetLeft == targetRight) targetLeft else targetLeft + ratio * (targetRight - targetLeft)
 }
 
-/**
- * Значения из графиков и таблиц
- */
+// я написал это сам, но честно говоря уже сложно понять как и почему это работает
 object DependentConstants {
 
     fun getIg(uk: Double, ok: Double): Double {
         val okIndex = okList.indexOfFirst { it >= ok }
-        val ukIndex = ukList.indexOfFirst { it >= uk }
+        val ukIndex = ukListForIg.indexOfFirst { it >= uk }
         return when {
-            okList[okIndex] == ok && ukList[ukIndex] == uk -> {
+            okList[okIndex] == ok && ukListForIg[ukIndex] == uk -> {
                 table[ukIndex][okIndex]
             }
 
-            okList[okIndex] == ok && ukList[ukIndex] > uk -> {
+            okList[okIndex] == ok && ukListForIg[ukIndex] > uk -> {
                 linearInterpolate(
-                    ukList[ukIndex - 1],
-                    ukList[ukIndex],
+                    ukListForIg[ukIndex - 1],
+                    ukListForIg[ukIndex],
                     uk,
                     table[ukIndex - 1][okIndex],
                     table[ukIndex][okIndex]
                 )
             }
 
-            ukList[ukIndex] == uk && okList[okIndex] > uk -> {
+            ukListForIg[ukIndex] == uk && okList[okIndex] > uk -> {
                 linearInterpolate(
                     okList[okIndex - 1],
                     okList[okIndex],
@@ -50,7 +45,7 @@ object DependentConstants {
                 )
             }
 
-            ukList[ukIndex] > uk && okList[okIndex] > ok -> {
+            ukListForIg[ukIndex] > uk && okList[okIndex] > ok -> {
                 val first = linearInterpolate(
                     okList[okIndex - 1],
                     okList[okIndex],
@@ -66,8 +61,8 @@ object DependentConstants {
                     table[ukIndex][okIndex]
                 )
                 linearInterpolate(
-                    ukList[ukIndex - 1],
-                    ukList[ukIndex],
+                    ukListForIg[ukIndex - 1],
+                    ukListForIg[ukIndex],
                     uk,
                     first,
                     second
@@ -80,7 +75,7 @@ object DependentConstants {
         }
     }
 
-    private val ukList = listOf(
+    private val ukListForIg = listOf(
         0.1, 0.2, 0.3, 0.4, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95
     )
 
@@ -106,9 +101,9 @@ object DependentConstants {
     )
 
     fun getIp1(uk1: Double): Double {
-        val (x0, y0) = ip1data.first()
-        val (x1, y1) = ip1data.last()
-        return linearInterpolate(x0, x1, uk1, y0, y1)
+        val left = ix1data[ip1data.indexOfFirst { it.first <= uk1 }]
+        val right = ip1data[ip1data.indexOfFirst { it.first >= uk1 }]
+        return linearInterpolate(left.first, right.first, uk1, left.second, right.second)
     }
 
     private val ip1data = listOf(
@@ -122,9 +117,9 @@ object DependentConstants {
     )
 
     fun getIx1(uk1: Double): Double {
-        val (x0, y0) = ix1data.first()
-        val (x1, y1) = ix1data.last()
-        return linearInterpolate(x0, x1, uk1, y0, y1)
+        val left = ix1data[ix1data.indexOfFirst { it.first <= uk1 }]
+        val right = ix1data[ix1data.indexOfFirst { it.first >= uk1 }]
+        return linearInterpolate(left.first, right.first, uk1, left.second, right.second)
     }
 
     private val ix1data = listOf(
@@ -138,6 +133,338 @@ object DependentConstants {
         0.7 to 48.0,
         0.8 to 48.0
     )
+
+    // Поиск F1
+    fun getF1(uk: Double, ok: Double): Double {
+        // Наибольший градус
+        val rightDegrees = degreesListForF1.indexOfFirst { it >= ok }
+        // Наименьший градус
+        val leftDegrees = degreesListForF1.lastIndex - degreesListForF1.reversed().indexOfFirst { it <= ok }
+        // Наибольший uk
+        val rightUk = ukListForF1.indexOfFirst { it >= uk }
+        // Наименьший uk
+        val leftUk = ukListForF1.lastIndex - ukListForF1.reversed().indexOfFirst { it <= uk }
+        // Интерполяция значения из "наименьшего графика"
+        val first = linearInterpolate(
+            left = ukListForF1[leftUk], // х0
+            right = ukListForF1[rightUk], // х1
+            target = uk, // искомый x
+            targetLeft = dataF1[leftDegrees][leftUk].second,
+            targetRight = dataF1[leftDegrees][rightUk].second
+        )
+        // Интерполяция значения из "наибольшего графика"
+        val second = linearInterpolate(
+            left = ukListForF1[leftUk],
+            right = ukListForF1[rightUk],
+            target = uk,
+            targetLeft = dataF1[rightDegrees][leftUk].second,
+            targetRight = dataF1[rightDegrees][rightUk].second
+        )
+        // Интерполяция между значениями полученными из графиков
+        val third = linearInterpolate(
+            left = degreesListForF1[leftDegrees],
+            right = degreesListForF1[rightDegrees],
+            target = ok,
+            targetLeft = first,
+            targetRight = second
+        )
+        return third
+    }
+
+    private val degreesListForF1 = listOf(10.0, 20.0, 30.0, 40.0, 50.0, 70.0)
+    private val ukListForF1 = listOf(0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7)
+
+    private val dataF1 = listOf(
+        // 10°
+        listOf(
+            0.0 to 0.0,
+            0.1 to 0.00419,
+            0.2 to 0.01857,
+            0.3 to 0.0346,
+            0.4 to 0.0554,
+            0.5 to 0.07619,
+            0.6 to 0.10018,
+            0.7 to 0.12574,
+        ),
+
+        // 20°
+        listOf(
+            0.0 to 0.0,
+            0.1 to 0.00420,
+            0.2 to 0.01857,
+            0.3 to 0.03936,
+            0.4 to 0.06492,
+            0.5 to 0.07774,
+            0.6 to 0.1305,
+            0.7 to 0.17218,
+        ),
+
+        // 30°
+        listOf(
+            0.0 to 0.0,
+            0.1 to 0.00420,
+            0.2 to 0.02178,
+            0.3 to 0.03936,
+            0.4 to 0.07619,
+            0.5 to 0.11777,
+            0.6 to 0.15935,
+            0.7 to 0.2089,
+        ),
+
+        // 40°
+        listOf(
+            0.0 to 0.0,
+            0.1 to 0.00420,
+            0.2 to 0.02178,
+            0.3 to 0.04578,
+            0.4 to 0.08736,
+            0.5 to 0.1305,
+            0.6 to 0.18656,
+            0.7 to 0.24893,
+        ),
+
+        // 50°
+        listOf(
+            0.0 to 0.0,
+            0.1 to 0.00420,
+            0.2 to 0.02178,
+            0.3 to 0.04578,
+            0.4 to 0.09377,
+            0.5 to 0.15,
+            0.6 to 0.2207,
+            0.7 to 0.30334,
+        ),
+
+        // 70°
+        listOf(
+            0.0 to 0.0,
+            0.1 to 0.00420,
+            0.2 to 0.02178,
+            0.3 to 0.05374,
+            0.4 to 0.10339,
+            0.5 to 0.16732,
+            0.6 to 0.23611,
+            0.7 to 0.34327,
+        )
+    )
+
+    fun getF2(uk: Double, ok: Double): Double {
+        // Наименьший граудс
+        val rightDegrees = degreesListForF2.lastIndex - degreesListForF2.reversed().indexOfFirst { it <= ok }
+        // Наибольший градус
+        val leftDegrees = degreesListForF2.indexOfFirst { it >= ok }
+        val rightUk = ukListForF2.indexOfFirst { it >= uk }
+        val leftUk = ukListForF2.lastIndex - ukListForF2.reversed().indexOfFirst { it <= uk }
+        // Для наиб
+        val first = linearInterpolate(
+            left = ukListForF2[leftUk],
+            right = ukListForF2[rightUk],
+            target = uk,
+            targetLeft = dataF2[leftDegrees][leftUk].second,
+            targetRight = dataF2[leftDegrees][rightUk].second
+        )
+        // Для наим
+        val second = linearInterpolate(
+            left = ukListForF2[leftUk],
+            right = ukListForF2[rightUk],
+            target = uk,
+            targetLeft = dataF2[rightDegrees][leftUk].second,
+            targetRight = dataF2[rightDegrees][rightUk].second
+        )
+        val third = linearInterpolate(
+            left = degreesListForF2[rightDegrees],
+            right = degreesListForF2[leftDegrees],
+            target = ok,
+            targetLeft = second,
+            targetRight = first
+        )
+        return third
+    }
+
+    private val degreesListForF2 = listOf(10.0, 30.0, 40.0, 50.0, 60.0, 70.0)
+    private val ukListForF2 = listOf(0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7)
+
+    private val dataF2 = listOf(
+        // 10°
+        listOf(
+            0.0 to 0.0,
+            0.1 to 0.00521,
+            0.2 to 0.01646,
+            0.3 to 0.04387,
+            0.4 to 0.09389,
+            0.5 to 0.15996,
+            0.6 to 0.24218,
+            0.7 to 0.35817,
+        ),
+
+        // 30°
+        listOf(
+            0.0 to 0.0,
+            0.1 to 0.003,
+            0.2 to 0.01167,
+            0.3 to 0.03428,
+            0.4 to 0.07617,
+            0.5 to 0.13578,
+            0.6 to 0.20508,
+            0.7 to 0.31461,
+        ),
+
+        // 40°
+        listOf(
+            0.0 to 0.0,
+            0.1 to 0.003,
+            0.2 to 0.0071,
+            0.3 to 0.02782,
+            0.4 to 0.06325,
+            0.5 to 0.11807,
+            0.6 to 0.18247,
+            0.7 to 0.27272,
+        ),
+
+        // 50°
+        listOf(
+            0.0 to 0.0,
+            0.1 to 0.003,
+            0.2 to 0.007,
+            0.3 to 0.02292,
+            0.4 to 0.05356,
+            0.5 to 0.09546,
+            0.6 to 0.1535,
+            0.7 to 0.23249,
+        ),
+
+        // 60°
+        listOf(
+            0.0 to 0.0,
+            0.1 to 0.003,
+            0.2 to 0.00687,
+            0.3 to 0.01646,
+            0.4 to 0.04064,
+            0.5 to 0.07617,
+            0.6 to 0.12286,
+            0.7 to 0.17768,
+        ),
+
+        // 70°
+        listOf(
+            0.0 to 0.0,
+            0.1 to 0.003,
+            0.2 to 0.00364,
+            0.3 to 0.0101,
+            0.4 to 0.02782,
+            0.5 to 0.05356,
+            0.6 to 0.08743,
+            0.7 to 0.13412,
+        )
+    )
+
+    fun getF4(uk: Double, ok: Double): Double {
+        // находим меньший градус
+        val rightDegrees = degreesListForF4.lastIndex - degreesListForF4.reversed().indexOfFirst { it <= ok }
+        // находим больший градус
+        val leftDegrees = degreesListForF4.indexOfFirst { it >= ok }
+        val rightUk = ukListForF4.indexOfFirst { it >= uk }
+        val leftUk = ukListForF4.lastIndex - ukListForF4.reversed().indexOfFirst { it <= uk }
+        // интерполяция для большего градуса
+        val first = linearInterpolate(
+            left = ukListForF4[leftUk],
+            right = ukListForF4[rightUk],
+            target = uk,
+            targetLeft = dataF4[leftDegrees][leftUk].second,
+            targetRight = dataF4[leftDegrees][rightUk].second
+        )
+        // интерполяция для меньшего градуса
+        val second = linearInterpolate(
+            left = ukListForF4[leftUk],
+            right = ukListForF4[rightUk],
+            target = uk,
+            targetLeft = dataF4[rightDegrees][leftUk].second,
+            targetRight = dataF4[rightDegrees][rightUk].second
+        )
+        if (ok in 10.0 .. 30.0) {
+            val result = if (uk <= 0.5) {
+                linearInterpolate(
+                    left = degreesListForF4[rightDegrees],
+                    right = degreesListForF4[leftDegrees],
+                    target = ok,
+                    targetLeft = first,
+                    targetRight = second
+                )
+            } else {
+                linearInterpolate(
+                    left = degreesListForF4[rightDegrees],
+                    right = degreesListForF4[leftDegrees],
+                    target = ok,
+                    targetLeft = second,
+                    targetRight = first
+                )
+            }
+            return result
+        }
+        val third = linearInterpolate(
+            left = degreesListForF4[rightDegrees],
+            right = degreesListForF4[leftDegrees],
+            target = ok,
+            targetLeft = second,
+            targetRight = first
+        )
+        return third
+    }
+
+    private val degreesListForF4 = listOf(10.0, 30.0, 50.0, 70.0)
+    private val ukListForF4 = listOf(0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7)
+
+    private val dataF4 = listOf(
+
+        // 10°
+        listOf(
+            0.0 to 0.0,
+            0.1 to 0.00185,
+            0.2 to 0.01121,
+            0.3 to 0.02997,
+            0.4 to 0.0552,
+            0.5 to 0.08621,
+            0.6 to 0.11935,
+            0.7 to 0.1576,
+        ),
+
+        // 30°
+        listOf(
+            0.0 to 0.0,
+            0.1 to 0.001,
+            0.2 to 0.00831,
+            0.3 to 0.02635,
+            0.4 to 0.05013,
+            0.5 to 0.08653,
+            0.6 to 0.12526,
+            0.7 to 0.17057,
+        ),
+
+        // 50°
+        listOf(
+            0.0 to 0.0,
+            0.1 to 0.001,
+            0.2 to 0.00619,
+            0.3 to 0.02273,
+            0.4 to 0.04439,
+            0.5 to 0.06243,
+            0.6 to 0.10063,
+            0.7 to 0.14028,
+        ),
+
+        // 70°
+        listOf(
+            0.0 to 0.0,
+            0.1 to 0.001,
+            0.2 to 0.00257,
+            0.3 to 0.00831,
+            0.4 to 0.0201,
+            0.5 to 0.03716,
+            0.6 to 0.05592,
+            0.7 to 0.08042,
+        ),
+    )
+
 
 
 }
