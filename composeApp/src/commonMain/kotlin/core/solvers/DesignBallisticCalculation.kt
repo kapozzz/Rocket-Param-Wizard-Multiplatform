@@ -72,7 +72,7 @@ class DesignBallisticCalculation(
      * Угол в радианах
      */
     val angleInRadians by lazy {
-        dependenciesParameters.angle * PI / 180
+        (dependenciesParameters.angle * PI) / 180
     }
 
     /**

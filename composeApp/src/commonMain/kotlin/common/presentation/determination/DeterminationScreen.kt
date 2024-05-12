@@ -7,12 +7,19 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import common.presentation.components.ParametersViewer
 import common.presentation.components.RPWText
 import common.presentation.components.RPWTextButton
 import common.presentation.main.CurrentScreen
@@ -31,32 +38,64 @@ fun DeterminationScreen(
     )
     val firstSolve =
         ParamsHandler.determination.value ?: throw IllegalStateException("Null determination stage")
-    Box(
+    Scaffold(
         modifier = Modifier
             .fillMaxSize(),
-        contentAlignment = Alignment.Center
     ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = Modifier.padding(horizontal = 16.dp)
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(it),
+            contentAlignment = Alignment.Center
         ) {
-            Text(
-                "Определение показателей эффективности двигателей:",
-                style = LocalTheme.current.typo.title
+            ParametersViewer(
+                name = "Определение показателей эффективности двигателей",
+                Pair("Удальная тяга (1)", firstSolve.specificGravityCalculatedFirst.toString()),
+                Pair("Удельная тяга (2)", firstSolve.specificGravityCalculatedSecond.toString()),
+                Pair(
+                    "Удельная тяга в пустоте (1)",
+                    firstSolve.specificGravityInVoidFirst.toString()
+                ),
+                Pair(
+                    "Удельная тяга в пустоте (2)",
+                    firstSolve.specificGravityInVoidSecond.toString()
+                ),
+                Pair(
+                    "Удельная тяга при старте с земли",
+                    firstSolve.specificGravityOnStartFromEarth.toString()
+                ),
+                Pair("Средняя удельная тяга", firstSolve.middleSpecificGravity.toString()),
+                Pair(
+                    "Тяговооруженность при старте (1)",
+                    firstSolve.firstStageThrustCapacityInVoid.toString()
+                )
             )
-            RPWText(text = "Удальная тяга 1:" + firstSolve.specificGravityCalculatedFirst.toString(),)
-            RPWText(text = "Удельная тяга 2:" + firstSolve.specificGravityCalculatedSecond.toString())
-            RPWText(text = "Удельная тяга в пустоте 1:" + firstSolve.specificGravityInVoidFirst.toString(),)
-            RPWText(text = "Удельная тяга в пустоте 2:" + firstSolve.specificGravityInVoidSecond.toString())
-            RPWText(text = "Удельная тяга при старте:" + firstSolve.specificGravityOnStartFromEarth.toString(),)
-            RPWText(text = "Средняя удельная тяга:" + firstSolve.middleSpecificGravity.toString())
-            RPWText(text = "Тяговооруженность при старте 1:" + firstSolve.firstStageThrustCapacityInVoid.toString(),)
-            RPWTextButton(
-                onClick = { navigator.navigate(CurrentScreen.UndefinedDesign.route) },
-                text = "Далее",
+            IconButton(
+                {
+                    navigator.navigate(CurrentScreen.UndefinedDesign.route)
+                },
                 modifier = Modifier
-            )
+                    .align(Alignment.BottomEnd)
+                    .padding(16.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.ArrowForward,
+                    contentDescription = null
+                )
+            }
+            IconButton(
+                {
+                    navigator.popBackStack()
+                },
+                modifier = Modifier
+                    .align(Alignment.BottomStart)
+                    .padding(16.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.ArrowBack,
+                    contentDescription = null
+                )
+            }
         }
     }
 }

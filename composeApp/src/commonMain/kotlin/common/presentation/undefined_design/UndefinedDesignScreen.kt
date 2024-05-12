@@ -3,10 +3,20 @@ package common.presentation.undefined_design
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import common.presentation.components.ParametersViewer
 import common.presentation.main.CurrentScreen
 import common.presentation.util.ParamsHandler
 import common.ui.theme.LocalNavigator
@@ -27,67 +37,75 @@ fun UndefinedDesignScreen() {
         )
         val undefinedDesign = ParamsHandler.undefinedDesign.value
             ?: throw IllegalStateException("Null undefined design stage")
-        Column {
-            Design(undefinedDesign)
-            TextButton(
-                onClick = {
-                    navigator.navigate(CurrentScreen.UndefinedVerification.route)
-                }
+        Scaffold(
+            modifier = Modifier
+                .fillMaxSize(),
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(it),
+                contentAlignment = Alignment.Center
             ) {
-                Text("Далее")
+                ParametersViewer(
+                    name = "Проектировочный баллистический расчет(неуточнённый)",
+                    Pair("Угол", undefinedDesign.dependenciesParameters.angle.toString()),
+                    Pair("Угол в радианах", undefinedDesign.angleInRadians.toString()),
+                    Pair("lCoord", undefinedDesign.dependenciesParameters.lCoord.toString()),
+                    Pair("hCoord", undefinedDesign.dependenciesParameters.hCoord.toString()),
+                    Pair("Поправочный коэффициент", undefinedDesign.definedCoefficient.toString()),
+                    Pair("lCoord уточ.", undefinedDesign.definedLCoord.toString()),
+                    Pair("hCoord уточ.", undefinedDesign.definedhCoord.toString()),
+                    Pair("Центральный угол", undefinedDesign.centralAngle.toString()),
+                    Pair("Скорость продуктов истечения:", undefinedDesign.fuelFlowRate.toString()),
+                    Pair(
+                        "Безразмерная скорость в конце полёта",
+                        undefinedDesign.dimensionlessVelocityOnFinishActiveFly.toString()
+                    ),
+                    Pair(
+                        "Скорость в конце полёта",
+                        undefinedDesign.velocityOnFinishActiveFly.toString()
+                    ),
+                    Pair(
+                        "Коэффициент заполнения топливом первой ступени",
+                        undefinedDesign.reducedPropellantFillFactorForFirstStage.toString()
+                    ),
+                    Pair(
+                        "Коэффициент заполнения топливом второй ступени",
+                        undefinedDesign.reducedPropellantFillFactorForSecondStage.toString()
+                    ),
+                    Pair(
+                        "Приведенный коэффициент заполнения ракеты топливом",
+                        undefinedDesign.reducedPropellantFillFactor.toString()
+                    )
+                )
+                IconButton(
+                    {
+                        navigator.navigate(CurrentScreen.UndefinedVerification.route)
+                    },
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(16.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.ArrowForward,
+                        contentDescription = null
+                    )
+                }
+                IconButton(
+                    {
+                        navigator.navigate(CurrentScreen.Determination.route)
+                    },
+                    modifier = Modifier
+                        .align(Alignment.BottomStart)
+                        .padding(16.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.ArrowBack,
+                        contentDescription = null
+                    )
+                }
             }
         }
     }
 }
-
-@Composable
-fun Design(
-    design: DesignBallisticCalculation
-) {
-    Column {
-        Text("Проектировочный баллистический расчет(неуточ.):")
-        Text(
-            text = "Угол:" + design.dependenciesParameters.angle
-        )
-        Text(
-            text = "Угол в радианах:" + design.angleInRadians
-        )
-        Text(
-            text = "lCoord:" + design.dependenciesParameters.lCoord
-        )
-        Text(
-            text = "hCoord:" + design.dependenciesParameters.hCoord
-        )
-        Text(
-            text = "Поправочный коэффициент:" + design.definedCoefficient
-        )
-        Text(
-            text = "lCoord уточ:" + design.definedLCoord
-        )
-        Text(
-            text = "hCoord уточ:" + design.definedhCoord
-        )
-        Text(
-            text = "Центральный угол:" + design.centralAngle
-        )
-        Text(
-            text = "Скорость продуктов истечения:" + design.fuelFlowRate
-        )
-        Text(
-            text = "Безразмерная скорость в конце полёта:" + design.dimensionlessVelocityOnFinishActiveFly.toString()
-        )
-        Text(
-            text = "Скорость в конце полёта:" + design.velocityOnFinishActiveFly
-        )
-        Text(
-            text = "Коэффициент заполнения топливом первой ступени:" + design.reducedPropellantFillFactorForFirstStage
-        )
-        Text(
-            text = "Коэффициент заполнения топливом второй ступени:" + design.reducedPropellantFillFactorForSecondStage
-        )
-        Text(
-            text = "Приведенный коэффициент заполнения ракеты топливом:" + design.reducedPropellantFillFactor
-        )
-    }
-}
-

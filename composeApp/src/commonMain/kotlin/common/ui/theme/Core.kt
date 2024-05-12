@@ -21,5 +21,6 @@ data class Colors(
 data class Typo(
     val title: TextStyle,
     val regular: TextStyle,
-    val hint: TextStyle
+    val hint: TextStyle,
+    val secondaryRegular: TextStyle
 )

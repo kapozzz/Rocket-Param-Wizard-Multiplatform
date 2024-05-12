@@ -37,6 +37,13 @@ private val hintTypo = TextStyle(
     fontWeight = FontWeight.Bold
 )
 
+private val secondaryRegularTypo = TextStyle(
+    fontSize = 16.sp,
+    fontFamily = FontFamily.Default,
+    fontStyle = FontStyle.Normal,
+    fontWeight = FontWeight.Medium
+)
+
 @Composable
 fun AppCommonTheme(
     content: @Composable () -> Unit
@@ -53,7 +60,8 @@ fun AppCommonTheme(
     val typo = Typo(
         title = titleTypo,
         regular = regularTypo,
-        hint = hintTypo
+        hint = hintTypo,
+        secondaryRegular = secondaryRegularTypo
     )
 
     val theme = Theme(
