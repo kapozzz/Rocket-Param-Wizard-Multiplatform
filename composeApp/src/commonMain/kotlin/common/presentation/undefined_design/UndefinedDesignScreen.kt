@@ -94,7 +94,7 @@ fun UndefinedDesignScreen() {
                 }
                 IconButton(
                     {
-                        navigator.navigate(CurrentScreen.Determination.route)
+                        navigator.popBackStack()
                     },
                     modifier = Modifier
                         .align(Alignment.BottomStart)

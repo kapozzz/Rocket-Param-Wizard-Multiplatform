@@ -11,12 +11,33 @@ import kotlin.math.pow
 import kotlin.math.sin
 
 
-class VerificationBallisticCalculation(
+data class VerificationBallisticCalculation(
     private val projectParams: ProjectParams,
     private val fuel: Fuel,
     private val designBallisticCalculation: DesignBallisticCalculation,
-    private val determinationOfEngineEfficiencyIndicators: DeterminationOfEngineEfficiencyIndicators
+    private val determinationOfEngineEfficiencyIndicators: DeterminationOfEngineEfficiencyIndicators,
+    var F1: Double = DependentConstants.getF1(
+        designBallisticCalculation.reducedPropellantFillFactorForFirstStage,
+        designBallisticCalculation.dependenciesParameters.angle
+    ),
+    var F2: Double = DependentConstants.getF2(
+        designBallisticCalculation.reducedPropellantFillFactorForFirstStage,
+        designBallisticCalculation.dependenciesParameters.angle
+    ),
+    var F4: Double = DependentConstants.getF4(
+        designBallisticCalculation.reducedPropellantFillFactorForFirstStage,
+        designBallisticCalculation.dependenciesParameters.angle
+    ),
+    var Ig1: Double = DependentConstants.getIg(
+        designBallisticCalculation.reducedPropellantFillFactorForFirstStage,
+        designBallisticCalculation.dependenciesParameters.angle
+    ),
+    var Ip1: Double = DependentConstants.getIp1(
+        designBallisticCalculation.reducedPropellantFillFactorForFirstStage
+    ),
+    var Ix1: Double = DependentConstants.getIx1(designBallisticCalculation.reducedPropellantFillFactorForFirstStage)
 ) {
+
 
     /**
      * Число Циолковского для первой ступени
@@ -46,7 +67,7 @@ class VerificationBallisticCalculation(
      * Потери скорости на преодоление лобового сопротивления
      */
     val velocityLessOnFrontPowers by lazy {
-        (DependentConstants.getIx1(designBallisticCalculation.reducedPropellantFillFactorForFirstStage) /
+        (Ix1 /
                 (projectParams.initialThrustCapacityOfTheRocket.first * cbrt(
                     sin(
                         designBallisticCalculation.angleInRadians
@@ -64,9 +85,7 @@ class VerificationBallisticCalculation(
                 DependentConstants.getIg(
                     designBallisticCalculation.reducedPropellantFillFactorForFirstStage,
                     designBallisticCalculation.dependenciesParameters.angle
-                ) - determinationOfEngineEfficiencyIndicators.specificGravityOnStartFromEarth * DependentConstants.getIp1(
-            designBallisticCalculation.reducedPropellantFillFactorForFirstStage
-        ) - velocityLessOnFrontPowers
+                ) - determinationOfEngineEfficiencyIndicators.specificGravityOnStartFromEarth * Ip1 - velocityLessOnFrontPowers
     }
 
     /**
@@ -92,29 +111,13 @@ class VerificationBallisticCalculation(
      * Высота hк1
      */
     val heightHk1 by lazy {
-        val F1 = DependentConstants.getF1(
-            designBallisticCalculation.reducedPropellantFillFactorForFirstStage,
-            designBallisticCalculation.dependenciesParameters.angle
-        )
-        val Ig = DependentConstants.getIg(
-            designBallisticCalculation.reducedPropellantFillFactorForFirstStage,
-            designBallisticCalculation.dependenciesParameters.angle
-        )
-        A1 * (F1 - (0.5 * projectParams.initialThrustCapacityOfTheRocket.first * Ig.pow(2)))
+        A1 * (F1 - (0.5 * projectParams.initialThrustCapacityOfTheRocket.first * Ig1.pow(2)))
     }
 
     /**
      * Дальность полёта lk1
      */
     val distanceLk1 by lazy {
-        val F2 = DependentConstants.getF2(
-            designBallisticCalculation.reducedPropellantFillFactorForFirstStage,
-            designBallisticCalculation.dependenciesParameters.angle
-        )
-        val F4 = DependentConstants.getF4(
-            designBallisticCalculation.reducedPropellantFillFactorForFirstStage,
-            designBallisticCalculation.dependenciesParameters.angle
-        )
         A1 * (F2 - projectParams.initialThrustCapacityOfTheRocket.first * F4)
     }
 

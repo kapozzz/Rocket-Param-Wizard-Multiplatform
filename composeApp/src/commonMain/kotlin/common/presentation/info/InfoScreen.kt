@@ -11,7 +11,6 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -58,6 +57,8 @@ fun InfoScreen() {
                     * Табличные значения следует сверять с методическим пособием т.к. функция линейной интерполяции иногда барахлит :)
                     
                     * С входными данными автора ничего не барахлит, но для вас никаких гарантий
+                    
+                    * Вы сможете поменять табличные значения выбранные программой если они покажутся вам некоректными 
                     
                     * Только для ДВУХСТУПЕНЧАТЫХ ракет, да я могу сделать общее решение, но не сейчас, мне нужно отдохнуть после написания функции линейной интерполяции в 1000 строк кода
                     
