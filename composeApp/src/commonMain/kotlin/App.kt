@@ -8,6 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import common.presentation.determination.DeterminationScreen
+import common.presentation.info.InfoScreen
 import common.presentation.main.CurrentScreen
 import common.presentation.main.MainScreen
 import common.presentation.undefined_design.UndefinedDesignScreen
@@ -29,7 +30,10 @@ fun App() {
             CompositionLocalProvider(
                 LocalNavigator provides (navController)
             ) {
-                NavHost(navController = navController, startDestination = CurrentScreen.Determination.route) {
+                NavHost(
+                    navController = navController,
+                    startDestination = CurrentScreen.Main.route
+                ) {
                     composable(CurrentScreen.Main.route) {
                         MainScreen()
                     }
@@ -41,6 +45,9 @@ fun App() {
                     }
                     composable(CurrentScreen.UndefinedVerification.route) {
                         UndefinedVerificationScreen()
+                    }
+                    composable(CurrentScreen.InfoScreen.route) {
+                        InfoScreen()
                     }
                 }
             }

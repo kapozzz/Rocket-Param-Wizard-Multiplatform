@@ -14,4 +14,6 @@ sealed class CurrentScreen(val route: String) {
 
     data object DefinedVerification: CurrentScreen("defined_verification")
 
+    data object InfoScreen: CurrentScreen("info_screen")
+
 }

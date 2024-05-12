@@ -6,11 +6,17 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import common.presentation.main.CurrentScreen
+import common.ui.theme.LocalNavigator
 import common.ui.theme.LocalTheme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
@@ -22,6 +28,7 @@ import rocketparamwizard.composeapp.generated.resources.main_logo
 fun Head(
     modifier: Modifier = Modifier
 ) {
+    val navigator = LocalNavigator.current
     Box(
         modifier = modifier
     ) {
@@ -32,7 +39,7 @@ fun Head(
         ) {
             Image(
                 modifier = Modifier
-                    .size(90.dp),
+                    .size(60.dp),
                 painter = painterResource(Res.drawable.main_logo),
                 contentDescription = null
             )
@@ -45,6 +52,14 @@ fun Head(
                 text = "Задача баллистического проектирования",
                 style = LocalTheme.current.typo.title
             )
+            IconButton({
+                navigator.navigate(CurrentScreen.InfoScreen.route)
+            }) {
+                Icon(
+                    imageVector = Icons.Default.Info,
+                    contentDescription = null
+                )
+            }
         }
 
     }
