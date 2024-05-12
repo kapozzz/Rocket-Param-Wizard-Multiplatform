@@ -1,5 +1,4 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -10,12 +9,11 @@ plugins {
 kotlin {
     androidTarget {
         compilations.all {
-            kotlinOptions {
-                jvmTarget = "11"
-            }
+            kotlinOptions.jvmTarget = "11"
         }
     }
-    mingwX64("native") { // on macOS
+
+    mingwX64("native") {
         binaries {
             executable()
         }
@@ -38,7 +36,7 @@ kotlin {
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
             implementation(libs.commons.math3)
-            implementation("org.jetbrains.androidx.navigation:navigation-compose:2.7.0-alpha03")
+            implementation(libs.navigation.compose)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
@@ -46,9 +44,6 @@ kotlin {
     }
 }
 
-tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "11"
-}
 
 android {
     namespace = "org.kapozzz.rpw"
@@ -80,17 +75,13 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
     }
     dependencies {
+        implementation(libs.androidx.navigation.runtime.ktx)
         debugImplementation(libs.compose.ui.tooling)
     }
 }
-dependencies {
-    implementation(libs.androidx.navigation.runtime.ktx)
-}
-
 compose.desktop {
     application {
         mainClass = "MainKt"
-
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "org.kapozzz.rpw"

@@ -164,4 +164,19 @@ data class VerificationBallisticCalculation(
     val distanceLk2 by lazy {
         distanceLk1 + A2 * B2 * cos(designBallisticCalculation.angleInRadians)
     }
+
+    /**
+     * Пассивная дальность полёта
+     */
+    val passiveFlyDistance by lazy {
+        Constants.EARTH_RADIUS 
+    }
+
+    /**
+     * Полная дальность полёта ракеты
+     */
+    val totalFlyDistance by lazy {
+
+    }
+
 }
