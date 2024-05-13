@@ -1,4 +1,4 @@
-package common.presentation.undefined_verification
+package common.presentation.defined_verification
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -31,7 +31,7 @@ import common.ui.theme.LocalSolvesState
 import kotlinx.coroutines.launch
 
 @Composable
-fun UndefinedVerificationScreen() {
+fun DefinedVerificationScreen() {
 
     val navigator = LocalNavigator.current
     val solvesState = LocalSolvesState.current
@@ -55,9 +55,9 @@ fun UndefinedVerificationScreen() {
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                with(solvesState.undefinedVerification.value) {
+                with(solvesState.definedVerification) {
                     ParametersViewer(
-                        name = "Проверочный баллистический расчет (неуточнённый):",
+                        name = "Проверочный баллистический расчет (уточнённый):",
                         Pair(
                             "Число Циолковского для первой ступени",
                             cValueFirstStage.toString()
@@ -180,73 +180,6 @@ fun UndefinedVerificationScreen() {
                             definedDeltaUpr.toString()
                         )
                     )
-                    PickAnotherParams(
-                        MutableParam(
-                            text = mutableStateOf(F1.toString()),
-                            onChange = {
-                                val copy = copy(
-                                    F1 = it.toDouble()
-                                )
-                                solvesState.undefinedVerification.value = copy
-                            },
-                            name = "Ф1"
-                        ),
-                        MutableParam(
-                            text = mutableStateOf(F2.toString()),
-                            onChange = {
-                                val copy = copy(
-                                    F2 = it.toDouble()
-                                )
-                                solvesState.undefinedVerification.value = copy
-                            },
-                            name = "Ф2"
-                        ),
-                        MutableParam(
-                            text = mutableStateOf(F4.toString()),
-                            onChange = {
-                                val copy = copy(
-                                    F4 = it.toDouble()
-                                )
-                                solvesState.undefinedVerification.value = copy
-                            },
-                            name = "Ф4"
-                        ),
-                        MutableParam(
-                            text = mutableStateOf(Ix1.toString()),
-                            onChange = {
-                                val copy = copy(
-                                    Ix1 = it.toDouble()
-                                )
-                                solvesState.undefinedVerification.value = copy
-                            },
-                            name = "Ix1"
-                        ),
-                        MutableParam(
-                            text = mutableStateOf(Ig1.toString()),
-                            onChange = {
-                                val copy = copy(
-                                    Ig1 = it.toDouble()
-                                )
-                                solvesState.undefinedVerification.value = copy
-                            },
-                            name = "Ig1"
-                        ),
-                        MutableParam(
-                            text = mutableStateOf(Ip1.toString()),
-                            onChange = {
-                                val copy = copy(
-                                    Ip1 = it.toDouble()
-                                )
-                                solvesState.undefinedVerification.value = copy
-                            },
-                            name = "Ip1"
-                        ),
-                        onOpenClick = {
-                            coroutineScope.launch {
-                                scrollState.animateScrollTo(scrollState.viewportSize)
-                            }
-                        }
-                    )
                 }
                 Spacer(
                     modifier = Modifier
@@ -257,7 +190,6 @@ fun UndefinedVerificationScreen() {
 
             IconButton(
                 {
-                    solvesState.define()
                     navigator.navigate(CurrentScreen.DefinedDesign.route)
                 },
                 modifier = Modifier

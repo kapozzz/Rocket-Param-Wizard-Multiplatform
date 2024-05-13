@@ -4,6 +4,7 @@ import core.models.Fuel
 import core.models.ProjectParams
 import core.objects.Constants
 import core.objects.DependentConstants
+import kotlin.math.abs
 import kotlin.math.atan
 import kotlin.math.cbrt
 import kotlin.math.cos
@@ -13,57 +14,44 @@ import kotlin.math.sin
 import kotlin.math.sqrt
 import kotlin.math.tan
 
-
 data class VerificationBallisticCalculation(
     private val projectParams: ProjectParams,
     private val fuel: Fuel,
-    private val designBallisticCalculation: DesignBallisticCalculation,
-    private val determinationOfEngineEfficiencyIndicators: DeterminationOfEngineEfficiencyIndicators,
+    private val determination: DeterminationOfEngineEfficiencyIndicators,
+    private val design: DesignBallisticCalculation,
     var F1: Double = DependentConstants.getF1(
-        designBallisticCalculation.reducedPropellantFillFactorForFirstStage,
-        designBallisticCalculation.dependenciesParameters.angle
+        design.reducedPropellantFillFactorForFirstStage,
+        design.dependenciesParameters.angle
     ),
     var F2: Double = DependentConstants.getF2(
-        designBallisticCalculation.reducedPropellantFillFactorForFirstStage,
-        designBallisticCalculation.dependenciesParameters.angle
+        design.reducedPropellantFillFactorForFirstStage,
+        design.dependenciesParameters.angle
     ),
     var F4: Double = DependentConstants.getF4(
-        designBallisticCalculation.reducedPropellantFillFactorForFirstStage,
-        designBallisticCalculation.dependenciesParameters.angle
+        design.reducedPropellantFillFactorForFirstStage,
+        design.dependenciesParameters.angle
     ),
     var Ig1: Double = DependentConstants.getIg(
-        designBallisticCalculation.reducedPropellantFillFactorForFirstStage,
-        designBallisticCalculation.dependenciesParameters.angle
+        design.reducedPropellantFillFactorForFirstStage,
+        design.dependenciesParameters.angle
     ),
     var Ip1: Double = DependentConstants.getIp1(
-        designBallisticCalculation.reducedPropellantFillFactorForFirstStage
+        design.reducedPropellantFillFactorForFirstStage
     ),
-    var Ix1: Double = DependentConstants.getIx1(designBallisticCalculation.reducedPropellantFillFactorForFirstStage)
+    var Ix1: Double = DependentConstants.getIx1(design.reducedPropellantFillFactorForFirstStage)
 ) {
-
-
     /**
      * Число Циолковского для первой ступени
      */
     val cValueFirstStage by lazy {
-        ln(1 / (1 - designBallisticCalculation.reducedPropellantFillFactorForFirstStage))
+        ln(1 / (1 - design.reducedPropellantFillFactorForFirstStage))
     }
 
     /**
      * Число Циолковского для второй ступени
      */
     val cValueSecondStage by lazy {
-        ln(1 / (1 - designBallisticCalculation.reducedPropellantFillFactorForSecondStage))
-    }
-
-    /**
-     *  Потери скорости на преодоление гравитационных сил
-     */
-    val velocityLessOnGravitationPowers by lazy {
-        DependentConstants.getIg(
-            designBallisticCalculation.reducedPropellantFillFactorForFirstStage,
-            designBallisticCalculation.dependenciesParameters.angle
-        )
+        ln(1 / (1 - design.reducedPropellantFillFactorForSecondStage))
     }
 
     /**
@@ -71,11 +59,13 @@ data class VerificationBallisticCalculation(
      */
     val velocityLessOnFrontPowers by lazy {
         (Ix1 /
-                (projectParams.initialThrustCapacityOfTheRocket.first * cbrt(
-                    sin(
-                        designBallisticCalculation.angleInRadians
-                    ).pow(2)
-                ))) *
+                (projectParams.initialThrustCapacityOfTheRocket.first *
+                        cbrt(
+                            sin(
+                                design.angleInRadians
+                            ).pow(2)
+                        )
+                        )) *
                 (Constants.GREAT_MID_LOAD / projectParams.initialTransverseLoadOnTheMidsection)
     }
 
@@ -83,12 +73,9 @@ data class VerificationBallisticCalculation(
      * Уравнение скорости в проекции на оси скоростной (поточной) системы координат после интегрирования по весу выгоревшего топлива µк1
      */
     val firstVelocityEqualization by lazy {
-        Constants.FREE_FALL_ACCELERATION * determinationOfEngineEfficiencyIndicators.specificGravityInVoidFirst * cValueFirstStage -
-                Constants.FREE_FALL_ACCELERATION * projectParams.initialThrustCapacityOfTheRocket.first * determinationOfEngineEfficiencyIndicators.specificGravityOnStartFromEarth *
-                DependentConstants.getIg(
-                    designBallisticCalculation.reducedPropellantFillFactorForFirstStage,
-                    designBallisticCalculation.dependenciesParameters.angle
-                ) - determinationOfEngineEfficiencyIndicators.specificGravityOnStartFromEarth * Ip1 - velocityLessOnFrontPowers
+        (Constants.FREE_FALL_ACCELERATION * determination.specificGravityInVoidFirst * cValueFirstStage) -
+                (Constants.FREE_FALL_ACCELERATION * projectParams.initialThrustCapacityOfTheRocket.first * determination.specificGravityOnStartFromEarth *
+                        Ig1) - (determination.specificGravityOnStartFromEarth * Ip1) - velocityLessOnFrontPowers
     }
 
     /**
@@ -96,7 +83,7 @@ data class VerificationBallisticCalculation(
      */
 
     val A1 by lazy {
-        Constants.FREE_FALL_ACCELERATION * projectParams.initialThrustCapacityOfTheRocket.first * determinationOfEngineEfficiencyIndicators.specificGravityOnStartFromEarth.pow(
+        Constants.FREE_FALL_ACCELERATION * projectParams.initialThrustCapacityOfTheRocket.first * determination.specificGravityOnStartFromEarth.pow(
             2
         )
     }
@@ -105,7 +92,7 @@ data class VerificationBallisticCalculation(
      * A2
      */
     val A2 by lazy {
-        Constants.FREE_FALL_ACCELERATION * projectParams.initialThrustCapacityOfTheRocket.second * determinationOfEngineEfficiencyIndicators.specificGravityInVoidSecond.pow(
+        Constants.FREE_FALL_ACCELERATION * projectParams.initialThrustCapacityOfTheRocket.second * determination.specificGravityInVoidSecond.pow(
             2
         )
     }
@@ -129,9 +116,9 @@ data class VerificationBallisticCalculation(
      * Vk2
      */
     val secondVelocityEqualization by lazy {
-        firstVelocityEqualization + Constants.FREE_FALL_ACCELERATION * determinationOfEngineEfficiencyIndicators.specificGravityInVoidSecond *
-                (cValueSecondStage - projectParams.initialThrustCapacityOfTheRocket.second * designBallisticCalculation.reducedPropellantFillFactorForSecondStage *
-                        sin(designBallisticCalculation.angleInRadians))
+        firstVelocityEqualization + Constants.FREE_FALL_ACCELERATION * determination.specificGravityInVoidSecond *
+                (cValueSecondStage - projectParams.initialThrustCapacityOfTheRocket.second * design.reducedPropellantFillFactorForSecondStage *
+                        sin(design.angleInRadians))
     }
 
     // угол в радианах
@@ -139,33 +126,33 @@ data class VerificationBallisticCalculation(
      * B2
      */
     val B2 by lazy {
-        designBallisticCalculation.reducedPropellantFillFactorForSecondStage * (firstVelocityEqualization / (Constants.FREE_FALL_ACCELERATION * determinationOfEngineEfficiencyIndicators.specificGravityInVoidSecond)) +
-                cValueSecondWithoutUk1 - 0.5 * projectParams.initialThrustCapacityOfTheRocket.second * designBallisticCalculation.reducedPropellantFillFactorForSecondStage.pow(
+        design.reducedPropellantFillFactorForSecondStage * (firstVelocityEqualization / (Constants.FREE_FALL_ACCELERATION * determination.specificGravityInVoidSecond)) +
+                cValueSecondWithoutUk1 - 0.5 * projectParams.initialThrustCapacityOfTheRocket.second * design.reducedPropellantFillFactorForSecondStage.pow(
             2
         ) *
-                sin(designBallisticCalculation.angleInRadians)
+                sin(design.angleInRadians)
     }
 
     /**
      * Число Циолковского Ц2
      */
     val cValueSecondWithoutUk1 by lazy {
-        designBallisticCalculation.reducedPropellantFillFactorForSecondStage + (1 - designBallisticCalculation.reducedPropellantFillFactorForSecondStage) *
-                ln(1 - designBallisticCalculation.reducedPropellantFillFactorForSecondStage)
+        design.reducedPropellantFillFactorForSecondStage + (1 - design.reducedPropellantFillFactorForSecondStage) *
+                ln(1 - design.reducedPropellantFillFactorForSecondStage)
     }
 
     /**
      * Высота hk2
      */
     val heightHk2 by lazy {
-        heightHk1 + A2 * B2 * sin(designBallisticCalculation.angleInRadians)
+        heightHk1 + A2 * B2 * sin(design.angleInRadians)
     }
 
     /**
      * Дальность lk2
      */
     val distanceLk2 by lazy {
-        distanceLk1 + A2 * B2 * cos(designBallisticCalculation.angleInRadians)
+        distanceLk1 + A2 * B2 * cos(design.angleInRadians)
     }
 
     /**
@@ -186,14 +173,14 @@ data class VerificationBallisticCalculation(
      * a
      */
     val a by lazy {
-        (2 * Constants.EARTH_RADIUS * (1 + tan(designBallisticCalculation.angleInRadians).pow(2) - vk)) - vk * heightHk2
+        (2 * Constants.EARTH_RADIUS * (1 + tan(design.angleInRadians).pow(2) - vk)) - vk * heightHk2
     }
 
     /**
      * b
      */
     val b by lazy {
-        vk * Constants.EARTH_RADIUS * tan(designBallisticCalculation.angleInRadians)
+        vk * Constants.EARTH_RADIUS * tan(design.angleInRadians)
     }
 
     /**
@@ -218,8 +205,32 @@ data class VerificationBallisticCalculation(
         passiveFlyDistance + distanceLk2
     }
 
+    // %
     val deltaL by lazy {
-        ((projectParams.maxFlyDistance - totalFlyDistance) / projectParams.maxFlyDistance) * 100
+        (abs(projectParams.maxFlyDistance - totalFlyDistance) / projectParams.maxFlyDistance) * 100
     }
 
+    val definedDeltaL by lazy {
+        (projectParams.maxFlyDistance - totalFlyDistance)
+    }
+
+    val expDefinedVk2onDefinedUpr by lazy {
+        (Constants.FREE_FALL_ACCELERATION * determination.middleSpecificGravity) / (1 - design.reducedPropellantFillFactor)
+    }
+
+    val expDefinedDeltaLonDefinedVk2 by lazy {
+        (Constants.EARTH_RADIUS / (tan(design.angleInRadians) + (heightHk2 * (tan(
+            centralAngleBeta / 2
+        ).pow(-1))) / Constants.EARTH_RADIUS)) * (4 * sin(centralAngleBeta / 2).pow(2)) / (vk * secondVelocityEqualization * cos(
+            design.angleInRadians
+        ).pow(2))
+    }
+
+    val deltaUpr by lazy {
+        definedDeltaL / (expDefinedDeltaLonDefinedVk2 * expDefinedVk2onDefinedUpr)
+    }
+
+    val definedDeltaUpr by lazy {
+        design.reducedPropellantFillFactor + deltaUpr
+    }
 }

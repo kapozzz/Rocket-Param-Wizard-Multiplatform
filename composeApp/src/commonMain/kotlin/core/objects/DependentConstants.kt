@@ -24,17 +24,19 @@ object DependentConstants {
             okList[okIndex] == ok && ukListForIg[ukIndex] == uk -> {
                 table[ukIndex][okIndex]
             }
-
             okList[okIndex] == ok && ukListForIg[ukIndex] > uk -> {
-                linearInterpolate(
-                    ukListForIg[ukIndex - 1],
-                    ukListForIg[ukIndex],
-                    uk,
-                    table[ukIndex - 1][okIndex],
+                if (ukIndex == 0) {
                     table[ukIndex][okIndex]
-                )
+                } else {
+                    linearInterpolate(
+                        ukListForIg[ukIndex - 1],
+                        ukListForIg[ukIndex],
+                        uk,
+                        table[ukIndex - 1][okIndex],
+                        table[ukIndex][okIndex]
+                    )
+                }
             }
-
             ukListForIg[ukIndex] == uk && okList[okIndex] > uk -> {
                 linearInterpolate(
                     okList[okIndex - 1],
@@ -44,7 +46,6 @@ object DependentConstants {
                     table[ukIndex][okIndex]
                 )
             }
-
             ukListForIg[ukIndex] > uk && okList[okIndex] > ok -> {
                 val first = linearInterpolate(
                     okList[okIndex - 1],
@@ -68,7 +69,6 @@ object DependentConstants {
                     second
                 )
             }
-
             else -> {
                 throw IllegalArgumentException("Wrong Ig input")
             }
@@ -101,8 +101,8 @@ object DependentConstants {
     )
 
     fun getIp1(uk1: Double): Double {
-        val left = ix1data[ip1data.indexOfFirst { it.first <= uk1 }]
-        val right = ip1data[ip1data.indexOfFirst { it.first >= uk1 }]
+        val left = ip1data[if (uk1 <= ip1data.first().first) 0 else ip1data.indexOfFirst { it.first <= uk1 }]
+        val right = ip1data[if (uk1 >= ip1data.last().first) ip1data.lastIndex else ip1data.indexOfFirst { it.first >= uk1 }]
         return linearInterpolate(left.first, right.first, uk1, left.second, right.second)
     }
 

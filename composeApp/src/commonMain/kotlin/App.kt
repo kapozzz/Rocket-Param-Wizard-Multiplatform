@@ -7,6 +7,8 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import common.presentation.defined_design.DefinedDesign
+import common.presentation.defined_verification.DefinedVerificationScreen
 import common.presentation.determination.DeterminationScreen
 import common.presentation.info.InfoScreen
 import common.presentation.main.CurrentScreen
@@ -55,6 +57,12 @@ fun App() {
                     }
                     composable(CurrentScreen.InfoScreen.route) {
                         InfoScreen()
+                    }
+                    composable(CurrentScreen.DefinedDesign.route) {
+                        DefinedDesign()
+                    }
+                    composable(CurrentScreen.DefinedVerification.route) {
+                        DefinedVerificationScreen()
                     }
                 }
             }

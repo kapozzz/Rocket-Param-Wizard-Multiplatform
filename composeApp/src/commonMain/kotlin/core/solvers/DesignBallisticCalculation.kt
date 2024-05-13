@@ -29,8 +29,7 @@ data class DependenciesParametersColumn(
 
 class DesignBallisticCalculation(
     private val projectParams: ProjectParams,
-    private val fuel: Fuel,
-    private val determinationOfEngineEfficiencyIndicators: DeterminationOfEngineEfficiencyIndicators,
+    private val determination: DeterminationOfEngineEfficiencyIndicators,
     private val definedFillFactor: Double? = null
 ) {
 
@@ -99,16 +98,15 @@ class DesignBallisticCalculation(
      * Скорость истечения топлива
      */
     val fuelFlowRate by lazy {
-        Constants.FREE_FALL_ACCELERATION * determinationOfEngineEfficiencyIndicators.middleSpecificGravity
+        Constants.FREE_FALL_ACCELERATION * determination.middleSpecificGravity
     }
 
-    // TODO не приведённое значение
     /**
      * Коэффициент заполнения ракеты топливом
      */
     val reducedPropellantFillFactor by lazy {
         definedFillFactor
-            ?: (1 - exp(-1 * ((Constants.VELOCITY_LESS_COEFFICIENT * velocityOnFinishActiveFly) / (Constants.FREE_FALL_ACCELERATION * determinationOfEngineEfficiencyIndicators.middleSpecificGravity))))
+            ?: (1 - exp(-1 * ((Constants.VELOCITY_LESS_COEFFICIENT * velocityOnFinishActiveFly) / (Constants.FREE_FALL_ACCELERATION * determination.middleSpecificGravity))))
     }
 
     /**
@@ -131,6 +129,15 @@ class DesignBallisticCalculation(
      */
     val greatVelocity by lazy {
         (fuelFlowRate * ln(1 / (1 - reducedPropellantFillFactor))) - velocityOnFinishActiveFly * (1 - Constants.VELOCITY_LESS_COEFFICIENT)
+    }
+
+    fun result(): List<String> {
+        return listOf(
+            "Коэффициент заполнения ракеты топливом: $reducedPropellantFillFactor",
+            "Коэффициент заполения ракеты топливом для первой ступени: $reducedPropellantFillFactorForFirstStage",
+            "Коэффициент заполнения ракеты топливом для второй ступени: $reducedPropellantFillFactorForSecondStage",
+            "Идеальная скорость: ${greatVelocity}"
+        )
     }
 }
 
