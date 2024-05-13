@@ -15,6 +15,11 @@ import common.presentation.undefined_design.UndefinedDesignScreen
 import common.presentation.undefined_verification.UndefinedVerificationScreen
 import common.ui.theme.AppCommonTheme
 import common.ui.theme.LocalNavigator
+import common.ui.theme.LocalSolvesState
+import core.models.ProjectParams
+import core.objects.Fuels
+import core.solvers.SolvesState
+import core.solvers.rememberSolvesState
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 
@@ -22,13 +27,15 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Preview
 fun App() {
     val navController = rememberNavController()
+    val solvesState = rememberSolvesState()
     AppCommonTheme {
         Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.TopCenter
         ) {
             CompositionLocalProvider(
-                LocalNavigator provides (navController)
+                LocalNavigator provides (navController),
+                LocalSolvesState provides (solvesState)
             ) {
                 NavHost(
                     navController = navController,

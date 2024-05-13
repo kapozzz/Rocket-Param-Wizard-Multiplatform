@@ -17,7 +17,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -27,28 +26,18 @@ import common.presentation.components.MutableParam
 import common.presentation.components.ParametersViewer
 import common.presentation.components.PickAnotherParams
 import common.presentation.main.CurrentScreen
-import common.presentation.util.ParamsHandler
 import common.ui.theme.LocalNavigator
-import core.solvers.VerificationBallisticCalculation
+import common.ui.theme.LocalSolvesState
 import kotlinx.coroutines.launch
 
 @Composable
 fun UndefinedVerificationScreen() {
 
     val navigator = LocalNavigator.current
-    val determination =
-        ParamsHandler.determination.value ?: throw IllegalStateException("Determination is null")
-    val undefinedDesign = ParamsHandler.undefinedDesign.value
-        ?: throw IllegalStateException("Undefined designs is null")
+    val solvesState = LocalSolvesState.current
     val scrollState = rememberScrollState()
     val coroutineScope = rememberCoroutineScope()
 
-    ParamsHandler.undefinedVerification.value = VerificationBallisticCalculation(
-        projectParams = ParamsHandler.projectParams.value,
-        fuel = ParamsHandler.fuel.value,
-        designBallisticCalculation = undefinedDesign,
-        determinationOfEngineEfficiencyIndicators = determination
-    )
     Scaffold(
         modifier = Modifier
             .fillMaxSize(),
@@ -66,149 +55,183 @@ fun UndefinedVerificationScreen() {
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                ParametersViewer(
-                    name = "Проверочный баллистический расчет (неуточнённый):",
-                    Pair(
-                        "Число Циолковского для первой ступени",
-                        ParamsHandler.undefinedVerification.value!!.cValueFirstStage.toString()
-                    ),
-                    Pair(
-                        "Число Циолковского для второй ступени",
-                        ParamsHandler.undefinedVerification.value!!.cValueSecondStage.toString()
-                    ),
-                    Pair(
-                        "Потери скорости на преодоление гравитационных сил",
-                        ParamsHandler.undefinedVerification.value!!.velocityLessOnGravitationPowers.toString()
-                    ),
-                    Pair(
-                        "Потери скорости на преодоление лобового сопротивления",
-                        ParamsHandler.undefinedVerification.value!!.velocityLessOnFrontPowers.toString()
-                    ),
-                    Pair(
-                        "Уравнение скорости Vk1", ParamsHandler.undefinedVerification.value!!.firstVelocityEqualization.toString()
-                    ),
-                    Pair(
-                        "Ix1", ParamsHandler.undefinedVerification.value!!.Ix1.toString()
-                    ),
-                    Pair(
-                        "Ip1", ParamsHandler.undefinedVerification.value!!.Ip1.toString()
-                    ),
-                    Pair(
-                        "Ig1", ParamsHandler.undefinedVerification.value!!.Ig1.toString()
-                    ),
-                    Pair(
-                        "Ф1", ParamsHandler.undefinedVerification.value!!.F1.toString()
-                    ),
-                    Pair(
-                        "Ф2", ParamsHandler.undefinedVerification.value!!.F2.toString()
-                    ),
-                    Pair(
-                        "Ф4", ParamsHandler.undefinedVerification.value!!.F4.toString()
-                    ),
-                    Pair(
-                        "A1",
-                        ParamsHandler.undefinedVerification.value!!.A1.toString()
-                    ),
-                    Pair(
-                        "A2",
-                        ParamsHandler.undefinedVerification.value!!.A2.toString()
-                    ),
-                    Pair(
-                        "Высота hk1",
-                        ParamsHandler.undefinedVerification.value!!.heightHk1.toString()
-                    ),
-                    Pair(
-                        "Дальность lk1",
-                        ParamsHandler.undefinedVerification.value!!.distanceLk1.toString()
-                    ),
-                    Pair(
-                        "Vk2",
-                        ParamsHandler.undefinedVerification.value!!.secondVelocityEqualization.toString()
-                    ),
-                    Pair(
-                        "B2",
-                        ParamsHandler.undefinedVerification.value!!.B2.toString()
-                    ),
-                    Pair(
-                        "Число Циолковского Ц2",
-                        ParamsHandler.undefinedVerification.value!!.cValueSecondWithoutUk1.toString()
-                    ),
-                    Pair(
-                        "Высота hk2",
-                        ParamsHandler.undefinedVerification.value!!.heightHk2.toString()
-                    ),
-                    Pair(
-                        "Дальность lk2",
-                        ParamsHandler.undefinedVerification.value!!.distanceLk2.toString()
+                with(solvesState.undefinedVerification.value) {
+                    ParametersViewer(
+                        name = "Проверочный баллистический расчет (неуточнённый):",
+                        Pair(
+                            "Число Циолковского для первой ступени",
+                            cValueFirstStage.toString()
+                        ),
+                        Pair(
+                            "Число Циолковского для второй ступени",
+                            cValueSecondStage.toString()
+                        ),
+                        Pair(
+                            "Потери скорости на преодоление гравитационных сил",
+                            velocityLessOnGravitationPowers.toString()
+                        ),
+                        Pair(
+                            "Потери скорости на преодоление лобового сопротивления",
+                            velocityLessOnFrontPowers.toString()
+                        ),
+                        Pair(
+                            "Уравнение скорости Vk1", firstVelocityEqualization.toString()
+                        ),
+                        Pair(
+                            "Ix1", Ix1.toString()
+                        ),
+                        Pair(
+                            "Ip1", Ip1.toString()
+                        ),
+                        Pair(
+                            "Ig1", Ig1.toString()
+                        ),
+                        Pair(
+                            "Ф1", F1.toString()
+                        ),
+                        Pair(
+                            "Ф2", F2.toString()
+                        ),
+                        Pair(
+                            "Ф4", F4.toString()
+                        ),
+                        Pair(
+                            "A1",
+                            A1.toString()
+                        ),
+                        Pair(
+                            "A2",
+                            A2.toString()
+                        ),
+                        Pair(
+                            "Высота hk1",
+                            heightHk1.toString()
+                        ),
+                        Pair(
+                            "Дальность lk1",
+                            distanceLk1.toString()
+                        ),
+                        Pair(
+                            "Vk2",
+                            secondVelocityEqualization.toString()
+                        ),
+                        Pair(
+                            "B2",
+                            B2.toString()
+                        ),
+                        Pair(
+                            "Число Циолковского Ц2",
+                            cValueSecondWithoutUk1.toString()
+                        ),
+                        Pair(
+                            "Высота hk2",
+                            heightHk2.toString()
+                        ),
+                        Pair(
+                            "Дальность lk2",
+                            distanceLk2.toString()
+                        ),
+                        Pair(
+                            "c",
+                            c.toString()
+                        ),
+                        Pair(
+                            "b",
+                            b.toString()
+                        ),
+                        Pair(
+                            "a",
+                            a.toString()
+                        ),
+                        Pair(
+                            "Центральный угол бетта",
+                            centralAngleBeta.toString()
+                        ),
+                        Pair(
+                            "Пассивная дальность полёта",
+                            passiveFlyDistance.toString()
+                        ),
+                        Pair(
+                            "Полная дальность полёта",
+                            totalFlyDistance.toString()
+                        ),
+                        Pair(
+                            "vk",
+                            vk.toString()
+                        ),
+                        Pair(
+                            "delta L",
+                            deltaL.toString()
+                        )
                     )
-                )
-                PickAnotherParams(
-                    MutableParam(
-                        text = mutableStateOf(ParamsHandler.undefinedVerification.value!!.F1.toString()),
-                        onChange = {
-                            val copy = ParamsHandler.undefinedVerification.value!!.copy(
-                                F1 = it.toDouble()
-                            )
-                            ParamsHandler.undefinedVerification.value = copy
-                        },
-                        name = "Ф1"
-                    ),
-                    MutableParam(
-                        text = mutableStateOf(ParamsHandler.undefinedVerification.value!!.F2.toString()),
-                        onChange = {
-                            val copy = ParamsHandler.undefinedVerification.value!!.copy(
-                                F2 = it.toDouble()
-                            )
-                            ParamsHandler.undefinedVerification.value = copy
-                        },
-                        name = "Ф2"
-                    ),
-                    MutableParam(
-                        text = mutableStateOf(ParamsHandler.undefinedVerification.value!!.F4.toString()),
-                        onChange = {
-                            val copy = ParamsHandler.undefinedVerification.value!!.copy(
-                                F4 = it.toDouble()
-                            )
-                            ParamsHandler.undefinedVerification.value = copy
-                        },
-                        name = "Ф4"
-                    ),
-                    MutableParam(
-                        text = mutableStateOf(ParamsHandler.undefinedVerification.value!!.Ix1.toString()),
-                        onChange = {
-                            val copy = ParamsHandler.undefinedVerification.value!!.copy(
-                                Ix1 = it.toDouble()
-                            )
-                            ParamsHandler.undefinedVerification.value = copy
-                        },
-                        name = "Ix1"
-                    ),
-                    MutableParam(
-                        text = mutableStateOf(ParamsHandler.undefinedVerification.value!!.Ig1.toString()),
-                        onChange = {
-                            val copy = ParamsHandler.undefinedVerification.value!!.copy(
-                                Ig1 = it.toDouble()
-                            )
-                            ParamsHandler.undefinedVerification.value = copy
-                        },
-                        name = "Ig1"
-                    ),
-                    MutableParam(
-                        text = mutableStateOf(ParamsHandler.undefinedVerification.value!!.Ip1.toString()),
-                        onChange = {
-                            val copy = ParamsHandler.undefinedVerification.value!!.copy(
-                                Ip1 = it.toDouble()
-                            )
-                            ParamsHandler.undefinedVerification.value = copy
-                        },
-                        name = "Ip1"
-                    ),
-                    onOpenClick = {
-                        coroutineScope.launch {
-                            scrollState.animateScrollTo(scrollState.viewportSize)
+                    PickAnotherParams(
+                        MutableParam(
+                            text = mutableStateOf(F1.toString()),
+                            onChange = {
+                                val copy = copy(
+                                    F1 = it.toDouble()
+                                )
+                                solvesState.undefinedVerification.value = copy
+                            },
+                            name = "Ф1"
+                        ),
+                        MutableParam(
+                            text = mutableStateOf(F2.toString()),
+                            onChange = {
+                                val copy = copy(
+                                    F2 = it.toDouble()
+                                )
+                                solvesState.undefinedVerification.value = copy
+                            },
+                            name = "Ф2"
+                        ),
+                        MutableParam(
+                            text = mutableStateOf(F4.toString()),
+                            onChange = {
+                                val copy = copy(
+                                    F4 = it.toDouble()
+                                )
+                                solvesState.undefinedVerification.value = copy
+                            },
+                            name = "Ф4"
+                        ),
+                        MutableParam(
+                            text = mutableStateOf(Ix1.toString()),
+                            onChange = {
+                                val copy = copy(
+                                    Ix1 = it.toDouble()
+                                )
+                                solvesState.undefinedVerification.value = copy
+                            },
+                            name = "Ix1"
+                        ),
+                        MutableParam(
+                            text = mutableStateOf(Ig1.toString()),
+                            onChange = {
+                                val copy = copy(
+                                    Ig1 = it.toDouble()
+                                )
+                                solvesState.undefinedVerification.value = copy
+                            },
+                            name = "Ig1"
+                        ),
+                        MutableParam(
+                            text = mutableStateOf(Ip1.toString()),
+                            onChange = {
+                                val copy = copy(
+                                    Ip1 = it.toDouble()
+                                )
+                                solvesState.undefinedVerification.value = copy
+                            },
+                            name = "Ip1"
+                        ),
+                        onOpenClick = {
+                            coroutineScope.launch {
+                                scrollState.animateScrollTo(scrollState.viewportSize)
+                            }
                         }
-                    }
-                )
+                    )
+                }
                 Spacer(
                     modifier = Modifier
                         .fillMaxWidth()

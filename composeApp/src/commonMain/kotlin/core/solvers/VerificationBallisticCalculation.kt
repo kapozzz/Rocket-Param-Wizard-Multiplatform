@@ -4,11 +4,14 @@ import core.models.Fuel
 import core.models.ProjectParams
 import core.objects.Constants
 import core.objects.DependentConstants
+import kotlin.math.atan
 import kotlin.math.cbrt
 import kotlin.math.cos
 import kotlin.math.ln
 import kotlin.math.pow
 import kotlin.math.sin
+import kotlin.math.sqrt
+import kotlin.math.tan
 
 
 data class VerificationBallisticCalculation(
@@ -166,17 +169,57 @@ data class VerificationBallisticCalculation(
     }
 
     /**
+     * vk
+     */
+    val vk by lazy {
+        (secondVelocityEqualization.pow(2) * (Constants.EARTH_RADIUS + heightHk2)) / (Constants.GRAVITY_CONSTANT * Constants.EARTH_WEIGHT)
+    }
+
+    /**
+     * c
+     */
+    val c by lazy {
+        vk * heightHk2
+    }
+
+    /**
+     * a
+     */
+    val a by lazy {
+        (2 * Constants.EARTH_RADIUS * (1 + tan(designBallisticCalculation.angleInRadians).pow(2) - vk)) - vk * heightHk2
+    }
+
+    /**
+     * b
+     */
+    val b by lazy {
+        vk * Constants.EARTH_RADIUS * tan(designBallisticCalculation.angleInRadians)
+    }
+
+    /**
+     * Центральный угол
+     */
+    val centralAngleBeta by lazy {
+        2 * atan((b + sqrt(b.pow(2) + (a * c))) / a)
+    }
+
+    /**
      * Пассивная дальность полёта
      */
     val passiveFlyDistance by lazy {
-        Constants.EARTH_RADIUS 
+        Constants.EARTH_RADIUS * centralAngleBeta
     }
 
+    // TODO откуда 0.001?
     /**
      * Полная дальность полёта ракеты
      */
     val totalFlyDistance by lazy {
+        passiveFlyDistance + distanceLk2
+    }
 
+    val deltaL by lazy {
+        ((projectParams.maxFlyDistance - totalFlyDistance) / projectParams.maxFlyDistance) * 100
     }
 
 }

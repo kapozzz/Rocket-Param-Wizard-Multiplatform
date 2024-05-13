@@ -15,20 +15,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import common.presentation.components.ParametersViewer
 import common.presentation.main.CurrentScreen
-import common.presentation.util.ParamsHandler
 import common.ui.theme.LocalNavigator
-import core.solvers.DeterminationOfEngineEfficiencyIndicators
+import common.ui.theme.LocalSolvesState
 
 @Composable
 fun DeterminationScreen(
 ) {
     val navigator = LocalNavigator.current
-    ParamsHandler.determination.value = DeterminationOfEngineEfficiencyIndicators(
-        projectParams = ParamsHandler.projectParams.value,
-        fuel = ParamsHandler.fuel.value
-    )
-    val firstSolve =
-        ParamsHandler.determination.value ?: throw IllegalStateException("Null determination stage")
+    val solvesState = LocalSolvesState.current
     Scaffold(
         modifier = Modifier
             .fillMaxSize(),
@@ -39,28 +33,33 @@ fun DeterminationScreen(
                 .padding(it),
             contentAlignment = Alignment.Center
         ) {
-            ParametersViewer(
-                name = "Определение показателей эффективности двигателей",
-                Pair("Удальная тяга (1)", firstSolve.specificGravityCalculatedFirst.toString()),
-                Pair("Удельная тяга (2)", firstSolve.specificGravityCalculatedSecond.toString()),
-                Pair(
-                    "Удельная тяга в пустоте (1)",
-                    firstSolve.specificGravityInVoidFirst.toString()
-                ),
-                Pair(
-                    "Удельная тяга в пустоте (2)",
-                    firstSolve.specificGravityInVoidSecond.toString()
-                ),
-                Pair(
-                    "Удельная тяга при старте с земли",
-                    firstSolve.specificGravityOnStartFromEarth.toString()
-                ),
-                Pair("Средняя удельная тяга", firstSolve.middleSpecificGravity.toString()),
-                Pair(
-                    "Тяговооруженность при старте (1)",
-                    firstSolve.firstStageThrustCapacityInVoid.toString()
+            with(solvesState.determination.value) {
+                ParametersViewer(
+                    name = "Определение показателей эффективности двигателей",
+                    Pair("Удальная тяга (1)", specificGravityCalculatedFirst.toString()),
+                    Pair(
+                        "Удельная тяга (2)",
+                        specificGravityCalculatedSecond.toString()
+                    ),
+                    Pair(
+                        "Удельная тяга в пустоте (1)",
+                        specificGravityInVoidFirst.toString()
+                    ),
+                    Pair(
+                        "Удельная тяга в пустоте (2)",
+                        specificGravityInVoidSecond.toString()
+                    ),
+                    Pair(
+                        "Удельная тяга при старте с земли",
+                        specificGravityOnStartFromEarth.toString()
+                    ),
+                    Pair("Средняя удельная тяга", middleSpecificGravity.toString()),
+                    Pair(
+                        "Тяговооруженность при старте (1)",
+                        firstStageThrustCapacityInVoid.toString()
+                    )
                 )
-            )
+            }
             IconButton(
                 {
                     navigator.navigate(CurrentScreen.UndefinedDesign.route)

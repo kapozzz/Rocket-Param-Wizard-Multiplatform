@@ -30,10 +30,7 @@ data class DependenciesParametersColumn(
 class DesignBallisticCalculation(
     private val projectParams: ProjectParams,
     private val fuel: Fuel,
-    private val determinationOfEngineEfficiencyIndicators: DeterminationOfEngineEfficiencyIndicators = DeterminationOfEngineEfficiencyIndicators(
-        projectParams = projectParams,
-        fuel = fuel
-    ),
+    private val determinationOfEngineEfficiencyIndicators: DeterminationOfEngineEfficiencyIndicators,
     private val definedFillFactor: Double? = null
 ) {
 
