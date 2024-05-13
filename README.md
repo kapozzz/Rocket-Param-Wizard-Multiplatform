@@ -1,2 +1,5 @@
-This is a Kotlin Multiplatform project targeting Android, Desktop.
+## Скачать:
+
+[**Windows**](https://github.com/kapozzz/RocketParamWizardMultiplatform/raw/master/actual_stable_version/rpw.rar)
+
 
