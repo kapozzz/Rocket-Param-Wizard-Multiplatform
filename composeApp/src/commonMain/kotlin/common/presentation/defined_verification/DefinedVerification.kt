@@ -36,7 +36,6 @@ fun DefinedVerificationScreen() {
     val navigator = LocalNavigator.current
     val solvesState = LocalSolvesState.current
     val scrollState = rememberScrollState()
-    val coroutineScope = rememberCoroutineScope()
 
     Scaffold(
         modifier = Modifier
@@ -58,127 +57,38 @@ fun DefinedVerificationScreen() {
                 with(solvesState.definedVerification) {
                     ParametersViewer(
                         name = "Проверочный баллистический расчет (уточнённый):",
-                        Pair(
-                            "Число Циолковского для первой ступени",
-                            cValueFirstStage.toString()
-                        ),
-                        Pair(
-                            "Число Циолковского для второй ступени",
-                            cValueSecondStage.toString()
-                        ),
-                        Pair(
-                            "Потери скорости на преодоление лобового сопротивления",
-                            velocityLessOnFrontPowers.toString()
-                        ),
-                        Pair(
-                            "Уравнение скорости Vk1", firstVelocityEqualization.toString()
-                        ),
-                        Pair(
-                            "Ix1", Ix1.toString()
-                        ),
-                        Pair(
-                            "Ip1", Ip1.toString()
-                        ),
-                        Pair(
-                            "Ig1", Ig1.toString()
-                        ),
-                        Pair(
-                            "Ф1", F1.toString()
-                        ),
-                        Pair(
-                            "Ф2", F2.toString()
-                        ),
-                        Pair(
-                            "Ф4", F4.toString()
-                        ),
-                        Pair(
-                            "A1",
-                            A1.toString()
-                        ),
-                        Pair(
-                            "A2",
-                            A2.toString()
-                        ),
-                        Pair(
-                            "Высота hk1",
-                            heightHk1.toString()
-                        ),
-                        Pair(
-                            "Дальность lk1",
-                            distanceLk1.toString()
-                        ),
-                        Pair(
-                            "Vk2",
-                            secondVelocityEqualization.toString()
-                        ),
-                        Pair(
-                            "B2",
-                            B2.toString()
-                        ),
-                        Pair(
-                            "Число Циолковского Ц2",
-                            cValueSecondWithoutUk1.toString()
-                        ),
-                        Pair(
-                            "Высота hk2",
-                            heightHk2.toString()
-                        ),
-                        Pair(
-                            "Дальность lk2",
-                            distanceLk2.toString()
-                        ),
-                        Pair(
-                            "c",
-                            c.toString()
-                        ),
-                        Pair(
-                            "b",
-                            b.toString()
-                        ),
-                        Pair(
-                            "a",
-                            a.toString()
-                        ),
-                        Pair(
-                            "Центральный угол бетта",
-                            centralAngleBeta.toString()
-                        ),
-                        Pair(
-                            "Пассивная дальность полёта",
-                            passiveFlyDistance.toString()
-                        ),
-                        Pair(
-                            "Полная дальность полёта",
-                            totalFlyDistance.toString()
-                        ),
-                        Pair(
-                            "vk",
-                            vk.toString()
-                        ),
-                        Pair(
-                            "delta L",
-                            deltaL.toString()
-                        ),
-                        Pair(
-                            "delta L уточнённое",
-                            definedDeltaL.toString()
-                        ),
-                        Pair(
-                            "Vk2/Uпр",
-                            expDefinedVk2onDefinedUpr.toString()
-                        ),
-                        Pair(
-                            "DeltaL/Vk2",
-                            expDefinedDeltaLonDefinedVk2.toString()
-                        ),
-                        Pair(
-                            "deltaUpr",
-                            deltaUpr.toString()
-                        ),
-                        Pair(
-                            "definedDeltaUpr",
-                            definedDeltaUpr.toString()
-                        )
+                        Pair("Ф1", F1.toString()),
+                        Pair("Ф2", F2.toString()),
+                        Pair("Ф4", F4.toString()),
+                        Pair("Скорость в конце активного участка полета (1-я ступень)", "${firstVelocityEqualization}[м/c]"),
+                        Pair("Число Ц1(uk1)", cValueFirstStage.toString()),
+                        Pair("Ig1", Ig1.toString()),
+                        Pair("Ip1", "${Ip1}[м/с^2]"),
+                        Pair("Ix1", "${Ix1}[м/c]"),
+                        Pair("Потери скорости на преодоление лобового сопротивления", "${velocityLessOnFrontPowers}[м/c]"),
+                        Pair("Высота hk1", "${heightHk1}[м]"),
+                        Pair("Дальность lk1", "${distanceLk1}[м]"),
+                        Pair("Число Ц2(uk1)", cValueSecondStage.toString()),
+                        Pair("A1", A1.toString()),
+                        Pair("Скорость в конце активного участка полета (2-я ступень)", secondVelocityEqualization.toString()),
+                        Pair("Высота hk2", "${heightHk2}[м]"),
+                        Pair("Дальность lk2", "${distanceLk2}[м]"),
+                        Pair("A2", A2.toString()),
+                        Pair("B2", B2.toString()),
+                        Pair("Число Циолковского", cValueSecondWithoutUk1.toString()),
+                        Pair("Полная дальность полёта", "${totalFlyDistance}[м]"),
+                        Pair("Пассивная дальность полёта", "${passiveFlyDistance}[м]"),
+                        Pair("Центральный угол", "${centralAngleBeta}[рад]"),
+                        Pair("a", a.toString()),
+                        Pair("b", b.toString()),
+                        Pair("c", c.toString()),
+                        Pair("Безразмерная скорость в конце активного участка полета", vk.toString()),
+                        Pair("Разница между заданной и полученной дальностями полета ракеты", "${deltaL}[%]"),
+                        Pair("Разница между заданной и полученной дальностями полета ракеты", "${definedDeltaL}[м]"),
+                        Pair("Vk2/Uпр", expDefinedVk2onDefinedUpr.toString()),
+                        Pair("DeltaL/Vk2", expDefinedDeltaLonDefinedVk2.toString()),
+                        Pair("deltaUpr", deltaUpr.toString()),
+                        Pair("Уточненное значение  приведенного коэффициента заполнения ракеты топливом", definedDeltaUpr.toString())
                     )
                 }
                 Spacer(
@@ -188,19 +98,19 @@ fun DefinedVerificationScreen() {
                 )
             }
 
-            IconButton(
-                {
-                    navigator.navigate(CurrentScreen.DefinedDesign.route)
-                },
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(16.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.ArrowForward,
-                    contentDescription = null
-                )
-            }
+//            IconButton(
+//                {
+//                    navigator.navigate(CurrentScreen.DefinedDesign.route)
+//                },
+//                modifier = Modifier
+//                    .align(Alignment.BottomEnd)
+//                    .padding(16.dp)
+//            ) {
+//                Icon(
+//                    imageVector = Icons.Default.ArrowForward,
+//                    contentDescription = null
+//                )
+//            }
             IconButton(
                 {
                     navigator.popBackStack()

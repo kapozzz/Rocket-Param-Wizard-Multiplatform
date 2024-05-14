@@ -36,28 +36,13 @@ fun DeterminationScreen(
             with(solvesState.determination.value) {
                 ParametersViewer(
                     name = "Определение показателей эффективности двигателей",
-                    Pair("Удальная тяга (1)", specificGravityCalculatedFirst.toString()),
-                    Pair(
-                        "Удельная тяга (2)",
-                        specificGravityCalculatedSecond.toString()
-                    ),
-                    Pair(
-                        "Удельная тяга в пустоте (1)",
-                        specificGravityInVoidFirst.toString()
-                    ),
-                    Pair(
-                        "Удельная тяга в пустоте (2)",
-                        specificGravityInVoidSecond.toString()
-                    ),
-                    Pair(
-                        "Удельная тяга при старте с земли",
-                        specificGravityOnStartFromEarth.toString()
-                    ),
-                    Pair("Средняя удельная тяга", middleSpecificGravity.toString()),
-                    Pair(
-                        "Тяговооруженность при старте (1)",
-                        firstStageThrustCapacityInVoid.toString()
-                    )
+                    Pair("Удальная тяга на расчётном режиме (1-ступень)", "${specificGravityCalculatedFirst}[c]"),
+                    Pair("Удальная тяга на расчётном режиме (2-ступень)", "${specificGravityCalculatedSecond}[c]"),
+                    Pair("Удельная тяга в пустоте (1-ступень)", "${ specificGravityInVoidFirst}[c]"),
+                    Pair("Удельная тяга в пустоте (2)", "${specificGravityInVoidSecond}[c]"),
+                    Pair("Удельная тяга при старте с земли", "${specificGravityOnStartFromEarth}[c]"),
+                    Pair("Средняя удельная тяга", "${middleSpecificGravity}[c]"),
+                    Pair("Тяговооруженность при старте (1)", "$firstStageThrustCapacityInVoid")
                 )
             }
             IconButton(

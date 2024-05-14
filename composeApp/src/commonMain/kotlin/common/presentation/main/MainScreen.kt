@@ -24,6 +24,8 @@ import common.presentation.main.components.ParametersPicker
 import common.ui.theme.LocalNavigator
 import common.ui.theme.LocalSolvesState
 import common.ui.theme.LocalTheme
+import core.models.Fuel
+import core.objects.Fuels
 
 @Composable
 fun MainScreen() {
@@ -49,6 +51,7 @@ fun MainScreen() {
             TextButton(
                 onClick = {
                     solvesState.projectParams.value = ProjectParams.getDefault()
+                    solvesState.fuel.value = Fuels.Dimethylhydrazine
                     navigator.navigate(CurrentScreen.Determination.route)
                 },
                 modifier = Modifier
@@ -90,6 +93,7 @@ fun MainScreen() {
                     ),
                 onParamsChange = {
                     solvesState.projectParams.value = it
+                    solvesState.rebuild()
                     navigator.navigate(CurrentScreen.Determination.route)
                 },
                 projectParams = solvesState.projectParams.value

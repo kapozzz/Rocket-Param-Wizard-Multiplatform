@@ -7,13 +7,12 @@ import androidx.compose.runtime.remember
 import core.models.Fuel
 import core.models.ProjectParams
 import core.objects.Fuels
-import kotlinx.coroutines.flow.MutableStateFlow
 
 data class SolvesState(
-    val projectParams: MutableStateFlow<ProjectParams> = MutableStateFlow(
+    val projectParams: MutableState<ProjectParams> = mutableStateOf(
         ProjectParams.getDefault()
     ),
-    val fuel: MutableStateFlow<Fuel> = MutableStateFlow(
+    val fuel: MutableState<Fuel> = mutableStateOf(
         Fuels.Dimethylhydrazine
     ),
     val determination: MutableState<DeterminationOfEngineEfficiencyIndicators> = mutableStateOf(
@@ -33,8 +32,23 @@ data class SolvesState(
     var definedDesign: DesignBallisticCalculation = undefinedDesign.value,
     var definedVerification: VerificationBallisticCalculation = undefinedVerification.value,
 ) {
+    var defCounter = 0
+    // Вычислить всё заново
+    fun rebuild() {
+        determination.value = DeterminationOfEngineEfficiencyIndicators(projectParams.value, fuel.value)
+        undefinedDesign.value = DesignBallisticCalculation(projectParams.value, determination.value)
+        undefinedVerification.value = VerificationBallisticCalculation(
+            projectParams = projectParams.value,
+            fuel = fuel.value,
+            design = undefinedDesign.value,
+            determination = determination.value
+        )
+        definedDesign = undefinedDesign.value
+        definedVerification = undefinedVerification.value
+    }
+    // Уточняем значения
     fun define() {
-        var counter = 0
+        defCounter = 0
         while (definedVerification.deltaL >= 3.0) {
             definedDesign = DesignBallisticCalculation(
                 projectParams = projectParams.value,
@@ -47,9 +61,8 @@ data class SolvesState(
                 determination = determination.value,
                 design = definedDesign
             )
-            counter++
+            defCounter++
         }
-        println("counter - $counter")
     }
 }
 

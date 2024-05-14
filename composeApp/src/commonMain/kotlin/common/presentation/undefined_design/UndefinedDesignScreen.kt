@@ -38,35 +38,20 @@ fun UndefinedDesignScreen() {
                 with(solvesState.undefinedDesign.value) {
                     ParametersViewer(
                         name = "Проектировочный баллистический расчет(неуточнённый)",
-                        Pair("Угол", dependenciesParameters.angle.toString()),
-                        Pair("Угол в радианах", angleInRadians.toString()),
-                        Pair("lCoord", dependenciesParameters.lCoord.toString()),
-                        Pair("hCoord", dependenciesParameters.hCoord.toString()),
-                        Pair("Поправочный коэффициент", definedCoefficient.toString()),
-                        Pair("lCoord уточ.", definedLCoord.toString()),
-                        Pair("hCoord уточ.", definedhCoord.toString()),
-                        Pair("Центральный угол", centralAngle.toString()),
-                        Pair("Скорость продуктов истечения:", fuelFlowRate.toString()),
-                        Pair(
-                            "Безразмерная скорость в конце полёта",
-                            dimensionlessVelocityOnFinishActiveFly.toString()
-                        ),
-                        Pair(
-                            "Скорость в конце полёта",
-                            velocityOnFinishActiveFly.toString()
-                        ),
-                        Pair(
-                            "Коэффициент заполнения топливом первой ступени",
-                            reducedPropellantFillFactorForFirstStage.toString()
-                        ),
-                        Pair(
-                            "Коэффициент заполнения топливом второй ступени",
-                            reducedPropellantFillFactorForSecondStage.toString()
-                        ),
-                        Pair(
-                            "Приведенный коэффициент заполнения ракеты топливом",
-                            reducedPropellantFillFactor.toString()
-                        )
+                        Pair("Угол наклона", "${dependenciesParameters.angle}°"),
+                        Pair("Угол наколна в радианах", "${angleInRadians}[рад]"),
+                        Pair("l координата", "${dependenciesParameters.lCoord}[м]"),
+                        Pair("h координата", "${dependenciesParameters.hCoord}[м]"),
+                        Pair("Поправочный коэффициент", "$definedCoefficient"),
+                        Pair("l координата(уточ.)", "${definedLCoord}[м]"),
+                        Pair("h координата(уточ.)", "${definedhCoord}[м]"),
+                        Pair("Центральный угол", "${centralAngle}[рад]"),
+                        Pair("Скорость продуктов истечения", "${fuelFlowRate}[м/c]"),
+                        Pair("Безразмерная скорость в конце полёта", "$dimensionlessVelocityOnFinishActiveFly"),
+                        Pair("Скорость в конце полёта", "${velocityOnFinishActiveFly}[м/c]"),
+                        Pair("Коэффициент заполнения топливом первой ступени", reducedPropellantFillFactorForFirstStage.toString()),
+                        Pair("Коэффициент заполнения топливом второй ступени", reducedPropellantFillFactorForSecondStage.toString()),
+                        Pair("Приведенный коэффициент заполнения ракеты топливом", reducedPropellantFillFactor.toString())
                     )
                 }
                 IconButton(
