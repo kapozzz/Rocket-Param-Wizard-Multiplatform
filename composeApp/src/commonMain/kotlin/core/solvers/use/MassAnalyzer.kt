@@ -30,35 +30,22 @@ data class MassAnalyzer(
         previousMass: Double,
         fillFactor: Double,
         thrustCapacityInVoid: Double,
-        fillFactorSecondStage: Double
     ): Pair<MassAnalyze, MassAnalyze> {
-        var _start = start
-        var _end = end
-        val step = 1.0 // шаг 1 тонна
-        var a: MassAnalyze? = null
-        var b: MassAnalyze? = null
-        fun initialize() {
-            a = MassAnalyze(
-                mass = _start,
-                thrustCapacityInVoid = thrustCapacityInVoid,
-                fillFactor = fillFactor,
-                fuel = solvesState.fuel.value,
-                previousMass = previousMass,
-            )
-            b = MassAnalyze(
-                mass = _end,
-                thrustCapacityInVoid = thrustCapacityInVoid,
-                fillFactor = fillFactor,
-                fuel = solvesState.fuel.value,
-                previousMass = previousMass,
-            )
-        }
-        do {
-            initialize()
-            if (a!!.different > 0) _start -= step
-            if (b!!.different < 0) _end += step
-        } while (a!!.different > 0 || b!!.different < 0)
-        return Pair(a!!, b!!)
+        val a = MassAnalyze(
+            mass = start,
+            thrustCapacityInVoid = thrustCapacityInVoid,
+            fillFactor = fillFactor,
+            fuel = solvesState.fuel.value,
+            previousMass = previousMass,
+        )
+        val b = MassAnalyze(
+            mass = end,
+            thrustCapacityInVoid = thrustCapacityInVoid,
+            fillFactor = fillFactor,
+            fuel = solvesState.fuel.value,
+            previousMass = previousMass,
+        )
+        return Pair(a, b)
     }
 
     private fun start() {
@@ -68,7 +55,6 @@ data class MassAnalyzer(
             previousMass = solvesState.projectParams.value.payloadWeight * 10.0.pow(-3),
             fillFactor = solvesState.definedDesign.reducedPropellantFillFactorForSecondStage,
             thrustCapacityInVoid = solvesState.projectParams.value.initialThrustCapacityOfTheRocket.second,
-            fillFactorSecondStage = solvesState.definedDesign.reducedPropellantFillFactorForSecondStage
         )
         first = a.first
         second = a.second
@@ -80,7 +66,6 @@ data class MassAnalyzer(
             previousMass = definedMassFirst,
             fillFactor = solvesState.definedDesign.reducedPropellantFillFactorForFirstStage,
             thrustCapacityInVoid = solvesState.determination.value.firstStageThrustCapacityInVoid,
-            fillFactorSecondStage = solvesState.definedDesign.reducedPropellantFillFactorForSecondStage
         )
         third = b.first
         fourth = b.second
