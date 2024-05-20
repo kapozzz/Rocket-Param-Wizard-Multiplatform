@@ -1,9 +1,11 @@
-
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
+import common.ui.theme.LocalPlatformProvider
+import common.ui.theme.Platform
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import rocketparamwizard.composeapp.generated.resources.Res
@@ -21,6 +23,11 @@ fun main() = application {
         state = state,
         icon = painterResource(Res.drawable.main_logo)
     ) {
-        App()
+        CompositionLocalProvider(
+            LocalPlatformProvider provides Platform.Desktop,
+            content = {
+                App()
+            }
+        )
     }
 }

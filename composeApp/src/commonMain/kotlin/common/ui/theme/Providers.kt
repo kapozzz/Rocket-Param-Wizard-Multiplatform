@@ -8,3 +8,8 @@ import core.solvers.state.SolvesState
 val LocalTheme = staticCompositionLocalOf<Theme> { error("theme not found :(") }
 val LocalNavigator = staticCompositionLocalOf<NavController> { error("navigator not found :(") }
 val LocalSolvesState = staticCompositionLocalOf<SolvesState> { error("solves state is not found :(") }
+val LocalPlatformProvider = staticCompositionLocalOf<Platform> { error("unknown platform") }
+
+enum class Platform {
+    Android, Desktop
+}
