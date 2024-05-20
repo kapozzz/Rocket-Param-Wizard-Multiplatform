@@ -44,24 +44,44 @@ private val secondaryRegularTypo = TextStyle(
     fontWeight = FontWeight.Medium
 )
 
+private val regularBold = TextStyle(
+    fontSize = 18.sp,
+    fontFamily = FontFamily.Default,
+    fontStyle = FontStyle.Normal,
+    fontWeight = FontWeight.Bold
+)
+
+private val lightTheme = Colors(
+    primary = primary,
+    onPrimary = onPrimary,
+    background = background,
+    onBackground = onBackground,
+    hint = hint,
+    onHint = onHint
+)
+
+// неправильные цвета
+private val darkTheme = Colors(
+    primary = Color.Blue,
+    onPrimary = Color.White,
+    background = Color.Black,
+    onBackground = Color.White,
+    hint = Color.LightGray,
+    onHint = Color.Black
+)
+
 @Composable
 fun AppCommonTheme(
     content: @Composable () -> Unit
 ) {
-    val colors = Colors(
-        primary = primary,
-        onPrimary = onPrimary,
-        background = background,
-        onBackground = onBackground,
-        hint = hint,
-        onHint = onHint
-    )
+    val colors = lightTheme
 
     val typo = Typo(
         title = titleTypo,
         regular = regularTypo,
         hint = hintTypo,
-        secondaryRegular = secondaryRegularTypo
+        secondaryRegular = secondaryRegularTypo,
+        regularBold = regularBold
     )
 
     val theme = Theme(

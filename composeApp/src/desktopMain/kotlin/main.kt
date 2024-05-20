@@ -12,7 +12,7 @@ import rocketparamwizard.composeapp.generated.resources.main_logo
 @OptIn(ExperimentalResourceApi::class)
 fun main() = application {
 
-    val state = rememberWindowState(size = DpSize(900.dp, 900.dp))
+    val state = rememberWindowState(size = DpSize(1300.dp, 900.dp))
 
     Window(
         onCloseRequest = ::exitApplication,

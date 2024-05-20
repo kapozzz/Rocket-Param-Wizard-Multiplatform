@@ -15,7 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import common.presentation.main.CurrentScreen
+import common.presentation.main.AppScreen
 import common.ui.theme.LocalNavigator
 import common.ui.theme.LocalTheme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
@@ -53,7 +53,7 @@ fun Head(
                 style = LocalTheme.current.typo.title
             )
             IconButton({
-                navigator.navigate(CurrentScreen.InfoScreen.route)
+                navigator.navigate(AppScreen.InfoScreen.route)
             }) {
                 Icon(
                     imageVector = Icons.Default.Info,

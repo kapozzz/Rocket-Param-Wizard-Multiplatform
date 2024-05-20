@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.dp
 import common.presentation.components.MutableParam
 import common.presentation.components.ParametersViewer
 import common.presentation.components.PickAnotherParams
-import common.presentation.main.CurrentScreen
+import common.presentation.main.AppScreen
 import common.ui.theme.LocalNavigator
 import common.ui.theme.LocalSolvesState
 import kotlinx.coroutines.launch
@@ -169,7 +169,7 @@ fun UndefinedVerificationScreen() {
             IconButton(
                 {
                     solvesState.define()
-                    navigator.navigate(CurrentScreen.DefinedDesign.route)
+                    navigator.navigate(AppScreen.DefinedDesign.route)
                 },
                 modifier = Modifier
                     .align(Alignment.BottomEnd)

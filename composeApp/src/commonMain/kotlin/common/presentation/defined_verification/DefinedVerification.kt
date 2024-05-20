@@ -17,18 +17,13 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import common.presentation.components.MutableParam
 import common.presentation.components.ParametersViewer
-import common.presentation.components.PickAnotherParams
-import common.presentation.main.CurrentScreen
+import common.presentation.main.AppScreen
 import common.ui.theme.LocalNavigator
 import common.ui.theme.LocalSolvesState
-import kotlinx.coroutines.launch
 
 @Composable
 fun DefinedVerificationScreen() {
@@ -97,20 +92,19 @@ fun DefinedVerificationScreen() {
                         .height(100.dp)
                 )
             }
-
-//            IconButton(
-//                {
-//                    navigator.navigate(CurrentScreen.DefinedDesign.route)
-//                },
-//                modifier = Modifier
-//                    .align(Alignment.BottomEnd)
-//                    .padding(16.dp)
-//            ) {
-//                Icon(
-//                    imageVector = Icons.Default.ArrowForward,
-//                    contentDescription = null
-//                )
-//            }
+            IconButton(
+                {
+                    navigator.navigate(AppScreen.MassAnalyze.route)
+                },
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(16.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.ArrowForward,
+                    contentDescription = null
+                )
+            }
             IconButton(
                 {
                     navigator.popBackStack()

@@ -3,10 +3,10 @@ package core.objects
 import kotlin.math.pow
 
 object Constants {
-    /**
-     * Коэффициент потерь скорости
-     */
-    const val VELOCITY_LESS_COEFFICIENT = 1.2
+//    /**
+//     * Коэффициент потерь скорости
+//     */
+//    const val VELOCITY_LESS_COEFFICIENT = 1.2
 
     /**
      * Ускорение свободного падения

@@ -14,7 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import common.presentation.components.ParametersViewer
-import common.presentation.main.CurrentScreen
+import common.presentation.main.AppScreen
 import common.ui.theme.LocalNavigator
 import common.ui.theme.LocalSolvesState
 
@@ -43,6 +43,7 @@ fun UndefinedDesignScreen() {
                         Pair("l координата", "${dependenciesParameters.lCoord}[м]"),
                         Pair("h координата", "${dependenciesParameters.hCoord}[м]"),
                         Pair("Поправочный коэффициент", "$definedCoefficient"),
+                        Pair("Kv", "${Kv}"),
                         Pair("l координата(уточ.)", "${definedLCoord}[м]"),
                         Pair("h координата(уточ.)", "${definedhCoord}[м]"),
                         Pair("Центральный угол", "${centralAngle}[рад]"),
@@ -56,7 +57,7 @@ fun UndefinedDesignScreen() {
                 }
                 IconButton(
                     {
-                        navigator.navigate(CurrentScreen.UndefinedVerification.route)
+                        navigator.navigate(AppScreen.UndefinedVerification.route)
                     },
                     modifier = Modifier
                         .align(Alignment.BottomEnd)

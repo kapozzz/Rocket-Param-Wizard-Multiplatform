@@ -1,19 +1,21 @@
 package common.presentation.main
 
-sealed class CurrentScreen(val route: String) {
+sealed class AppScreen(val route: String) {
 
-    data object Main : CurrentScreen("main")
+    data object Main : AppScreen("main")
 
-    data object Determination : CurrentScreen("determination")
+    data object Determination : AppScreen("determination")
 
-    data object UndefinedDesign : CurrentScreen("undefined_screen")
+    data object UndefinedDesign : AppScreen("undefined_screen")
 
-    data object DefinedDesign: CurrentScreen("defined_screen")
+    data object DefinedDesign: AppScreen("defined_screen")
 
-    data object UndefinedVerification: CurrentScreen("undefined_verification")
+    data object UndefinedVerification: AppScreen("undefined_verification")
 
-    data object DefinedVerification: CurrentScreen("defined_verification")
+    data object DefinedVerification: AppScreen("defined_verification")
 
-    data object InfoScreen: CurrentScreen("info_screen")
+    data object InfoScreen: AppScreen("info_screen")
+
+    data object MassAnalyze: AppScreen("mass_analyze")
 
 }

@@ -11,17 +11,15 @@ import common.presentation.defined_design.DefinedDesign
 import common.presentation.defined_verification.DefinedVerificationScreen
 import common.presentation.determination.DeterminationScreen
 import common.presentation.info.InfoScreen
-import common.presentation.main.CurrentScreen
+import common.presentation.main.AppScreen
 import common.presentation.main.MainScreen
+import common.presentation.mass_analyze.MassAnalyzeScreen
 import common.presentation.undefined_design.UndefinedDesignScreen
 import common.presentation.undefined_verification.UndefinedVerificationScreen
 import common.ui.theme.AppCommonTheme
 import common.ui.theme.LocalNavigator
 import common.ui.theme.LocalSolvesState
-import core.models.ProjectParams
-import core.objects.Fuels
-import core.solvers.SolvesState
-import core.solvers.rememberSolvesState
+import core.solvers.state.rememberSolvesState
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 
@@ -41,28 +39,31 @@ fun App() {
             ) {
                 NavHost(
                     navController = navController,
-                    startDestination = CurrentScreen.Main.route
+                    startDestination = AppScreen.Main.route
                 ) {
-                    composable(CurrentScreen.Main.route) {
+                    composable(AppScreen.Main.route) {
                         MainScreen()
                     }
-                    composable(CurrentScreen.Determination.route) {
+                    composable(AppScreen.Determination.route) {
                         DeterminationScreen()
                     }
-                    composable(CurrentScreen.UndefinedDesign.route) {
+                    composable(AppScreen.UndefinedDesign.route) {
                         UndefinedDesignScreen()
                     }
-                    composable(CurrentScreen.UndefinedVerification.route) {
+                    composable(AppScreen.UndefinedVerification.route) {
                         UndefinedVerificationScreen()
                     }
-                    composable(CurrentScreen.InfoScreen.route) {
+                    composable(AppScreen.InfoScreen.route) {
                         InfoScreen()
                     }
-                    composable(CurrentScreen.DefinedDesign.route) {
+                    composable(AppScreen.DefinedDesign.route) {
                         DefinedDesign()
                     }
-                    composable(CurrentScreen.DefinedVerification.route) {
+                    composable(AppScreen.DefinedVerification.route) {
                         DefinedVerificationScreen()
+                    }
+                    composable(AppScreen.MassAnalyze.route) {
+                        MassAnalyzeScreen()
                     }
                 }
             }

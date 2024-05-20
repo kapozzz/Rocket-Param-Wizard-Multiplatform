@@ -22,5 +22,6 @@ data class Typo(
     val title: TextStyle,
     val regular: TextStyle,
     val hint: TextStyle,
-    val secondaryRegular: TextStyle
+    val secondaryRegular: TextStyle,
+    val regularBold: TextStyle
 )

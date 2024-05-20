@@ -2,7 +2,7 @@ package common.ui.theme
 
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.navigation.NavController
-import core.solvers.SolvesState
+import core.solvers.state.SolvesState
 
 
 val LocalTheme = staticCompositionLocalOf<Theme> { error("theme not found :(") }

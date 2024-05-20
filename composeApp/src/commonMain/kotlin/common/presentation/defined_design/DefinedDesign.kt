@@ -14,7 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import common.presentation.components.ParametersViewer
-import common.presentation.main.CurrentScreen
+import common.presentation.main.AppScreen
 import common.ui.theme.LocalNavigator
 import common.ui.theme.LocalSolvesState
 
@@ -56,7 +56,7 @@ fun DefinedDesign() {
                 }
                 IconButton(
                     {
-                        navigator.navigate(CurrentScreen.DefinedVerification.route)
+                        navigator.navigate(AppScreen.DefinedVerification.route)
                     },
                     modifier = Modifier
                         .align(Alignment.BottomEnd)

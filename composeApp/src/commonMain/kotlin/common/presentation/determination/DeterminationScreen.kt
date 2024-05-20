@@ -14,7 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import common.presentation.components.ParametersViewer
-import common.presentation.main.CurrentScreen
+import common.presentation.main.AppScreen
 import common.ui.theme.LocalNavigator
 import common.ui.theme.LocalSolvesState
 
@@ -38,16 +38,16 @@ fun DeterminationScreen(
                     name = "Определение показателей эффективности двигателей",
                     Pair("Удальная тяга на расчётном режиме (1-ступень)", "${specificGravityCalculatedFirst}[c]"),
                     Pair("Удальная тяга на расчётном режиме (2-ступень)", "${specificGravityCalculatedSecond}[c]"),
-                    Pair("Удельная тяга в пустоте (1-ступень)", "${ specificGravityInVoidFirst}[c]"),
-                    Pair("Удельная тяга в пустоте (2)", "${specificGravityInVoidSecond}[c]"),
+                    Pair("Удельная тяга двигателей в пустоте (1-ступень)", "${ specificGravityInVoidFirst}[c]"),
+                    Pair("Удельная тяга двигателей в пустоте (2)", "${specificGravityInVoidSecond}[c]"),
                     Pair("Удельная тяга при старте с земли", "${specificGravityOnStartFromEarth}[c]"),
                     Pair("Средняя удельная тяга", "${middleSpecificGravity}[c]"),
-                    Pair("Тяговооруженность при старте (1)", "$firstStageThrustCapacityInVoid")
+                    Pair("Тяговооруженность первой ступени в пустоте", "$firstStageThrustCapacityInVoid")
                 )
             }
             IconButton(
                 {
-                    navigator.navigate(CurrentScreen.UndefinedDesign.route)
+                    navigator.navigate(AppScreen.UndefinedDesign.route)
                 },
                 modifier = Modifier
                     .align(Alignment.BottomEnd)

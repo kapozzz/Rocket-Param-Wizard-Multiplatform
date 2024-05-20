@@ -103,7 +103,7 @@ fun ParametersPicker(
         )
 
         ParamsField(
-            name = "Начальная тяговооруженность первой ступени",
+            name = "Начальная тяговооруженность первой ступени на земле",
             param = params.initialThrustCapacityOfTheRocketFirst.value,
             onParamChange = {
                 params.initialThrustCapacityOfTheRocketFirst.value = it
@@ -112,7 +112,7 @@ fun ParametersPicker(
         )
 
         ParamsField(
-            name = "Начальная тяговооруженность для второй ступени",
+            name = "Начальная тяговооруженность второй ступени в пустоте",
             param = params.initialThrustCapacityOfTheRocketSecond.value,
             onParamChange = {
                 params.initialThrustCapacityOfTheRocketSecond.value = it
@@ -121,7 +121,7 @@ fun ParametersPicker(
         )
 
         ParamsField(
-            name = "Давление на срезе сопла двигателя первой ступени [бар]",
+            name = "Давление на срезе сопла двигателя 1-й ступени [бар]",
             param = params.engineNozzleShearPressureFirst.value,
             onParamChange = {
                 params.engineNozzleShearPressureFirst.value = it
@@ -130,7 +130,7 @@ fun ParametersPicker(
         )
 
         ParamsField(
-            name = "Давление на срезе сопла двигателя второй ступени [бар]",
+            name = "Давление на срезе сопла двигателя 2-й ступени [бар]",
             param = params.engineNozzleShearPressureSecond.value,
             onParamChange = {
                 params.engineNozzleShearPressureSecond.value = it
@@ -139,7 +139,7 @@ fun ParametersPicker(
         )
 
         ParamsField(
-            name = "Давление в камере сгорания первой ступени [бар]",
+            name = "Давление в камере сгорания 1-й ступени [бар]",
             param = params.pressureInTheCombustionChambersOfEnginesFirst.value,
             onParamChange = {
                 params.pressureInTheCombustionChambersOfEnginesFirst.value = it
@@ -148,7 +148,7 @@ fun ParametersPicker(
         )
 
         ParamsField(
-            name = "Давление в камере сгорания второй ступени [бар]",
+            name = "Давление в камере сгорания 2-й ступени [бар]",
             param = params.pressureInTheCombustionChambersOfEnginesSecond.value,
             onParamChange = {
                 params.pressureInTheCombustionChambersOfEnginesSecond.value = it

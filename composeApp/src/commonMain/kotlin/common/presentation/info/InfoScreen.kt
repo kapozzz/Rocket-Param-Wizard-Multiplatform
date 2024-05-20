@@ -16,7 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import common.presentation.main.CurrentScreen
+import common.presentation.main.AppScreen
 import common.ui.theme.LocalNavigator
 import common.ui.theme.LocalTheme
 
@@ -72,7 +72,7 @@ fun InfoScreen() {
             )
         }
         IconButton({
-            navigator.navigate(CurrentScreen.Main.route)
+            navigator.navigate(AppScreen.Main.route)
         }, modifier = Modifier.padding(16.dp).align(Alignment.BottomStart)) {
             Icon(
                 imageVector = Icons.Default.ArrowBack,
