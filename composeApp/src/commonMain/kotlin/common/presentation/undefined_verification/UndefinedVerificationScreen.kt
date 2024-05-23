@@ -168,8 +168,8 @@ fun UndefinedVerificationScreen() {
 
             IconButton(
                 {
-                    solvesState.define()
                     navigator.navigate(AppScreen.DefinedDesign.route)
+                    solvesState.define()
                 },
                 modifier = Modifier
                     .align(Alignment.BottomEnd)

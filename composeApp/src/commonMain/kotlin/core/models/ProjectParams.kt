@@ -35,14 +35,14 @@ data class ProjectParams(
 ) {
     companion object {
         fun getDefault(): ProjectParams = ProjectParams(
-            initialThrustCapacityOfTheRocket = 0.55 to 0.7,
-            pressureInTheCombustionChambersOfEngines = 80.0 to 50.0,
-            maxFlyDistance = 6000000.0,
-            payloadWeight = 3000.0,
-            engineNozzleShearPressure = 0.45 to 0.1,
-            theRatioOfTheRelativeFuelWeightsOfTheStages = 1.1,
-            initialTransverseLoadOnTheMidsection = 16000.0,
-            relativeLengthOfTheRocket = 11.0
+            initialThrustCapacityOfTheRocket = 0.58 to 0.76,
+            pressureInTheCombustionChambersOfEngines = 112.0 to 98.0,
+            maxFlyDistance = 9000000.0,
+            payloadWeight = 6000.0,
+            engineNozzleShearPressure = 0.575 to 0.15,
+            theRatioOfTheRelativeFuelWeightsOfTheStages = 1.25,
+            initialTransverseLoadOnTheMidsection = 14000.0,
+            relativeLengthOfTheRocket = 10.0
         )
     }
 }

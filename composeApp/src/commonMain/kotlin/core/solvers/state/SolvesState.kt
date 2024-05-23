@@ -9,14 +9,16 @@ import core.models.ProjectParams
 import core.objects.Fuels
 import core.solvers.Design
 import core.solvers.Determination
+import core.solvers.MassAnalyze
 import core.solvers.Verification
+import core.solvers.use.MassAnalyzer
 
 data class SolvesState(
     val projectParams: MutableState<ProjectParams> = mutableStateOf(
         ProjectParams.getDefault()
     ),
     val fuel: MutableState<Fuel> = mutableStateOf(
-        Fuels.LiquidHydrogen
+        Fuels.Dimethylhydrazine
     ),
     val determination: MutableState<Determination> = mutableStateOf(
         Determination(projectParams.value, fuel.value)
@@ -35,7 +37,19 @@ data class SolvesState(
     var definedDesign: Design = undefinedDesign.value,
     var definedVerification: Verification = undefinedVerification.value,
 ) {
+
+    val massAnalyzer: MutableState<MassAnalyzer> = mutableStateOf(
+        MassAnalyzer(
+            solvesState = this,
+            firstInFirstStage = 30.0,
+            secondInFirstStage = 140.0,
+            firstInSecondStage = 14.0,
+            secondInSecondStage = 40.0
+        )
+    )
+
     var defCounter = 0
+
     // Вычислить всё заново
     fun rebuild() {
         determination.value = Determination(projectParams.value, fuel.value)
@@ -49,6 +63,7 @@ data class SolvesState(
         definedDesign = undefinedDesign.value
         definedVerification = undefinedVerification.value
     }
+
     // Уточняем значения
     fun define() {
         defCounter = 0

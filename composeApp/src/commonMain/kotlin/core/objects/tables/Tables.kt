@@ -115,11 +115,17 @@ object Tables {
     )
 
     fun getIp1(uk1: Double): Double {
-        val left =
-            ip1data[if (uk1 <= ip1data.first().first) 0 else ip1data.indexOfFirst { it.first <= uk1 }]
-        val right =
-            ip1data[if (uk1 >= ip1data.last().first) ip1data.lastIndex else ip1data.indexOfFirst { it.first >= uk1 }]
-        return linearInterpolate(left.first, right.first, uk1, left.second, right.second)
+        if (uk1 < 0) error("uk1 меньше нуля")
+        if (uk1 >= 0.6) return ip1data.last().second
+        val x0 = ip1data.size - 1 - ip1data.reversed().indexOfFirst { it.first <= uk1 }
+        val x1 = ip1data.indexOfFirst { it.first >= uk1 }
+        return linearInterpolate(
+            left = ip1data[x0].first,
+            right = ip1data[x1].first,
+            target = uk1,
+            targetLeft = ip1data[x0].second,
+            targetRight = ip1data[x1].second
+        )
     }
 
     private val ip1data = listOf(
@@ -133,7 +139,7 @@ object Tables {
     )
 
     fun getIx1(uk1: Double): Double {
-        val left = ix1data[ix1data.indexOfFirst { it.first <= uk1 }]
+        val left = ix1data[ix1data.size - 1 - ix1data.reversed().indexOfFirst { it.first <= uk1 }]
         val right = ix1data[ix1data.indexOfFirst { it.first >= uk1 }]
         return linearInterpolate(left.first, right.first, uk1, left.second, right.second)
     }

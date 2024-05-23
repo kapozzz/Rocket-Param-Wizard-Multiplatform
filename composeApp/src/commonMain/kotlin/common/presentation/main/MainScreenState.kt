@@ -18,4 +18,6 @@ sealed class AppScreen(val route: String) {
 
     data object MassAnalyze: AppScreen("mass_analyze")
 
+    data object Geometry: AppScreen("geometry")
+
 }

@@ -51,7 +51,7 @@ fun MainScreen() {
             TextButton(
                 onClick = {
                     solvesState.projectParams.value = ProjectParams.getDefault()
-                    solvesState.fuel.value = Fuels.LiquidHydrogen
+                    solvesState.fuel.value = Fuels.Dimethylhydrazine
                     navigator.navigate(AppScreen.Determination.route)
                 },
                 modifier = Modifier

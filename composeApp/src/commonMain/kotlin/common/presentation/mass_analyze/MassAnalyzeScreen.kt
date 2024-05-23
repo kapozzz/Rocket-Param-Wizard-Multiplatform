@@ -2,8 +2,10 @@ package common.presentation.mass_analyze
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -41,17 +43,7 @@ fun MassAnalyzeScreen() {
     val firstHigh = remember { mutableStateOf(140.0) }
     val firstLow = remember { mutableStateOf(30.0) }
 
-    val analyzer = remember {
-        mutableStateOf(
-            MassAnalyzer(
-                solvesState = solvesState,
-                firstInFirstStage = 30.0,
-                secondInFirstStage = 140.0,
-                firstInSecondStage = 14.0,
-                secondInSecondStage = 40.0
-            )
-        )
-    }
+    val analyzer = solvesState.massAnalyzer
 
     Scaffold(
         modifier = Modifier
@@ -311,20 +303,25 @@ fun MassAnalyzeScreen() {
                         Pair("Введенный коэффициент K", "${definedK}[т]"),
                     )
                 }
+                Spacer(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(100.dp)
+                )
             }
-//            IconButton(
-//                {
-//                    navigator.navigate(AppScreen.UndefinedVerification.route)
-//                },
-//                modifier = Modifier
-//                    .align(Alignment.BottomEnd)
-//                    .padding(16.dp)
-//            ) {
-//                Icon(
-//                    imageVector = Icons.Default.ArrowForward,
-//                    contentDescription = null
-//                )
-//            }
+            IconButton(
+                {
+                    navigator.navigate(AppScreen.Geometry.route)
+                },
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(16.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.ArrowForward,
+                    contentDescription = null
+                )
+            }
             IconButton(
                 {
                     navigator.popBackStack()

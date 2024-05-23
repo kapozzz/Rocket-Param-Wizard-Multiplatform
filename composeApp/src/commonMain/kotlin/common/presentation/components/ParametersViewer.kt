@@ -41,12 +41,12 @@ fun ParametersViewer(
 ) {
     Box(
         modifier = modifier
-            .fillMaxSize(),
+            .fillMaxWidth(),
         contentAlignment = Alignment.Center
     ) {
         Column(
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxWidth()
                 .padding(vertical = 16.dp),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally

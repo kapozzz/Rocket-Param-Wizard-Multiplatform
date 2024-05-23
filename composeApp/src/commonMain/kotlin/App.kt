@@ -10,6 +10,7 @@ import androidx.navigation.compose.rememberNavController
 import common.presentation.defined_design.DefinedDesign
 import common.presentation.defined_verification.DefinedVerificationScreen
 import common.presentation.determination.DeterminationScreen
+import common.presentation.geometry.GeometryScreen
 import common.presentation.info.InfoScreen
 import common.presentation.main.AppScreen
 import common.presentation.main.MainScreen
@@ -64,6 +65,9 @@ fun App() {
                     }
                     composable(AppScreen.MassAnalyze.route) {
                         MassAnalyzeScreen()
+                    }
+                    composable(AppScreen.Geometry.route) {
+                        GeometryScreen()
                     }
                 }
             }
