@@ -12,10 +12,21 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.Text
+import androidx.compose.material.TextButton
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.List
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.isCtrlPressed
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onKeyEvent
+import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import common.ui.theme.LocalPlatformProvider
@@ -67,6 +78,7 @@ private fun ElementInViewer(
     val textColor =
         LocalTheme.current.colors.onBackground
     val scrollState = rememberScrollState()
+    val clipboardManager = LocalClipboardManager.current
     Row(
         modifier = modifier
             .height(42.dp)
@@ -87,11 +99,24 @@ private fun ElementInViewer(
             color = textColor,
             modifier = Modifier.padding(start = 16.dp)
         )
-        Text(
-            text = value.second,
-            style = LocalTheme.current.typo.secondaryRegular,
-            color = textColor,
-            modifier = Modifier.padding(end = 16.dp)
-        )
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = value.second,
+                style = LocalTheme.current.typo.secondaryRegular,
+                color = textColor,
+                modifier = Modifier
+                    .padding(end = 16.dp)
+            )
+            TextButton(onClick = {
+                clipboardManager.setText(AnnotatedString(value.second.filter { it.isDigit() || it == '.' }))
+            }) {
+                Text(
+                    text = "Copy",
+                    color = LocalTheme.current.colors.onBackground
+                )
+            }
+        }
     }
 }

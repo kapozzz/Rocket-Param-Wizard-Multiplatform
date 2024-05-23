@@ -36,7 +36,7 @@ data class Fuel(
      * Средняя плотность жидкого топлива
      */
     val middleLiquidFuelDensity: Double
-        get() = ((1 + K) * oxidantDensity * fuelDensity) /
+        get() = ((1.0 + K) * oxidantDensity * fuelDensity) /
                 (oxidantDensity + (K * fuelDensity))
 }
 

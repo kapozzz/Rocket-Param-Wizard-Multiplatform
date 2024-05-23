@@ -18,60 +18,74 @@ fun linearInterpolate(
 object Tables {
 
     fun getIg(uk: Double, ok: Double): Double {
-        val okIndex = okList.indexOfFirst { it >= ok }
-        val ukIndex = ukListForIg.indexOfFirst { it >= uk }
-        return when {
-            okList[okIndex] == ok && ukListForIg[ukIndex] == uk -> {
-                table[ukIndex][okIndex]
-            }
-            okList[okIndex] == ok && ukListForIg[ukIndex] > uk -> {
-                if (ukIndex == 0) {
+        try {
+            val okIndex = okList.indexOfFirst { it >= ok }
+            val ukIndex = ukListForIg.indexOfFirst { it >= uk }
+            return when {
+                okList[okIndex] == ok && ukListForIg[ukIndex] == uk -> {
                     table[ukIndex][okIndex]
-                } else {
+                }
+
+                okList[okIndex] == ok && ukListForIg[ukIndex] > uk -> {
+                    if (ukIndex == 0) {
+                        table[ukIndex][okIndex]
+                    } else {
+                        linearInterpolate(
+                            ukListForIg[ukIndex - 1],
+                            ukListForIg[ukIndex],
+                            uk,
+                            table[ukIndex - 1][okIndex],
+                            table[ukIndex][okIndex]
+                        )
+                    }
+                }
+
+                ukListForIg[ukIndex] == uk && okList[okIndex] > uk -> {
+                    linearInterpolate(
+                        okList[okIndex - 1],
+                        okList[okIndex],
+                        ok,
+                        table[ukIndex][okIndex - 1],
+                        table[ukIndex][okIndex]
+                    )
+                }
+
+                ukListForIg[ukIndex] > uk && okList[okIndex] > ok -> {
+                    val first = linearInterpolate(
+                        okList[okIndex - 1],
+                        okList[okIndex],
+                        ok,
+                        table[ukIndex - 1][okIndex - 1],
+                        table[ukIndex - 1][okIndex]
+                    )
+                    val second = linearInterpolate(
+                        okList[okIndex - 1],
+                        okList[okIndex],
+                        ok,
+                        table[ukIndex][okIndex - 1],
+                        table[ukIndex][okIndex]
+                    )
                     linearInterpolate(
                         ukListForIg[ukIndex - 1],
                         ukListForIg[ukIndex],
                         uk,
-                        table[ukIndex - 1][okIndex],
-                        table[ukIndex][okIndex]
+                        first,
+                        second
                     )
                 }
+
+                else -> {
+                    throw IllegalArgumentException("Wrong Ig input")
+                }
             }
-            ukListForIg[ukIndex] == uk && okList[okIndex] > uk -> {
-                linearInterpolate(
-                    okList[okIndex - 1],
-                    okList[okIndex],
-                    ok,
-                    table[ukIndex][okIndex - 1],
-                    table[ukIndex][okIndex]
-                )
-            }
-            ukListForIg[ukIndex] > uk && okList[okIndex] > ok -> {
-                val first = linearInterpolate(
-                    okList[okIndex - 1],
-                    okList[okIndex],
-                    ok,
-                    table[ukIndex - 1][okIndex - 1],
-                    table[ukIndex - 1][okIndex]
-                )
-                val second = linearInterpolate(
-                    okList[okIndex - 1],
-                    okList[okIndex],
-                    ok,
-                    table[ukIndex][okIndex - 1],
-                    table[ukIndex][okIndex]
-                )
-                linearInterpolate(
-                    ukListForIg[ukIndex - 1],
-                    ukListForIg[ukIndex],
-                    uk,
-                    first,
-                    second
-                )
-            }
-            else -> {
-                throw IllegalArgumentException("Wrong Ig input")
-            }
+        } catch (e: Exception) {
+            throw Exception(
+                """
+                1) Проверьте правильность введённых данных
+                2) Нагрузка на мидель вводится домноженная на 10^3
+                3) Напишите об этом мне
+            """.trimIndent()
+            )
         }
     }
 
@@ -101,8 +115,10 @@ object Tables {
     )
 
     fun getIp1(uk1: Double): Double {
-        val left = ip1data[if (uk1 <= ip1data.first().first) 0 else ip1data.indexOfFirst { it.first <= uk1 }]
-        val right = ip1data[if (uk1 >= ip1data.last().first) ip1data.lastIndex else ip1data.indexOfFirst { it.first >= uk1 }]
+        val left =
+            ip1data[if (uk1 <= ip1data.first().first) 0 else ip1data.indexOfFirst { it.first <= uk1 }]
+        val right =
+            ip1data[if (uk1 >= ip1data.last().first) ip1data.lastIndex else ip1data.indexOfFirst { it.first >= uk1 }]
         return linearInterpolate(left.first, right.first, uk1, left.second, right.second)
     }
 
@@ -136,39 +152,51 @@ object Tables {
 
     // Поиск F1
     fun getF1(uk: Double, ok: Double): Double {
-        // Наибольший градус
-        val rightDegrees = degreesListForF1.indexOfFirst { it >= ok }
-        // Наименьший градус
-        val leftDegrees = degreesListForF1.lastIndex - degreesListForF1.reversed().indexOfFirst { it <= ok }
-        // Наибольший uk
-        val rightUk = ukListForF1.indexOfFirst { it >= uk }
-        // Наименьший uk
-        val leftUk = ukListForF1.lastIndex - ukListForF1.reversed().indexOfFirst { it <= uk }
-        // Интерполяция значения из "наименьшего графика"
-        val first = linearInterpolate(
-            left = ukListForF1[leftUk], // х0
-            right = ukListForF1[rightUk], // х1
-            target = uk, // искомый x
-            targetLeft = dataF1[leftDegrees][leftUk].second,
-            targetRight = dataF1[leftDegrees][rightUk].second
-        )
-        // Интерполяция значения из "наибольшего графика"
-        val second = linearInterpolate(
-            left = ukListForF1[leftUk],
-            right = ukListForF1[rightUk],
-            target = uk,
-            targetLeft = dataF1[rightDegrees][leftUk].second,
-            targetRight = dataF1[rightDegrees][rightUk].second
-        )
-        // Интерполяция между значениями полученными из графиков
-        val third = linearInterpolate(
-            left = degreesListForF1[leftDegrees],
-            right = degreesListForF1[rightDegrees],
-            target = ok,
-            targetLeft = first,
-            targetRight = second
-        )
-        return third
+        try {
+            // Наибольший градус
+            val rightDegrees = degreesListForF1.indexOfFirst { it >= ok }
+            // Наименьший градус
+            val leftDegrees =
+                degreesListForF1.lastIndex - degreesListForF1.reversed().indexOfFirst { it <= ok }
+            // Наибольший uk
+            val rightUk = ukListForF1.indexOfFirst { it >= uk }
+            // Наименьший uk
+            val leftUk = ukListForF1.lastIndex - ukListForF1.reversed().indexOfFirst { it <= uk }
+            // Интерполяция значения из "наименьшего графика"
+            val first = linearInterpolate(
+                left = ukListForF1[leftUk], // х0
+                right = ukListForF1[rightUk], // х1
+                target = uk, // искомый x
+                targetLeft = dataF1[leftDegrees][leftUk].second,
+                targetRight = dataF1[leftDegrees][rightUk].second
+            )
+            // Интерполяция значения из "наибольшего графика"
+            val second = linearInterpolate(
+                left = ukListForF1[leftUk],
+                right = ukListForF1[rightUk],
+                target = uk,
+                targetLeft = dataF1[rightDegrees][leftUk].second,
+                targetRight = dataF1[rightDegrees][rightUk].second
+            )
+            // Интерполяция между значениями полученными из графиков
+            val third = linearInterpolate(
+                left = degreesListForF1[leftDegrees],
+                right = degreesListForF1[rightDegrees],
+                target = ok,
+                targetLeft = first,
+                targetRight = second
+            )
+            return third
+        } catch (e: Exception) {
+            throw Exception(
+                """
+                1) Проверьте правильность введённых данных
+                2) Нагрузка на мидель вводится домноженная на 10^3
+                3) Напишите об этом мне
+            """.trimIndent()
+            )
+        }
+        // Да мне лень делать окно с ошибкой!
     }
 
     private val degreesListForF1 = listOf(10.0, 20.0, 30.0, 40.0, 50.0, 70.0)
@@ -249,36 +277,46 @@ object Tables {
     )
 
     fun getF2(uk: Double, ok: Double): Double {
-        // Наименьший граудс
-        val rightDegrees = degreesListForF2.lastIndex - degreesListForF2.reversed().indexOfFirst { it <= ok }
-        // Наибольший градус
-        val leftDegrees = degreesListForF2.indexOfFirst { it >= ok }
-        val rightUk = ukListForF2.indexOfFirst { it >= uk }
-        val leftUk = ukListForF2.lastIndex - ukListForF2.reversed().indexOfFirst { it <= uk }
-        // Для наиб
-        val first = linearInterpolate(
-            left = ukListForF2[leftUk],
-            right = ukListForF2[rightUk],
-            target = uk,
-            targetLeft = dataF2[leftDegrees][leftUk].second,
-            targetRight = dataF2[leftDegrees][rightUk].second
-        )
-        // Для наим
-        val second = linearInterpolate(
-            left = ukListForF2[leftUk],
-            right = ukListForF2[rightUk],
-            target = uk,
-            targetLeft = dataF2[rightDegrees][leftUk].second,
-            targetRight = dataF2[rightDegrees][rightUk].second
-        )
-        val third = linearInterpolate(
-            left = degreesListForF2[rightDegrees],
-            right = degreesListForF2[leftDegrees],
-            target = ok,
-            targetLeft = second,
-            targetRight = first
-        )
-        return third
+        try {// Наименьший граудс
+            val rightDegrees =
+                degreesListForF2.lastIndex - degreesListForF2.reversed().indexOfFirst { it <= ok }
+            // Наибольший градус
+            val leftDegrees = degreesListForF2.indexOfFirst { it >= ok }
+            val rightUk = ukListForF2.indexOfFirst { it >= uk }
+            val leftUk = ukListForF2.lastIndex - ukListForF2.reversed().indexOfFirst { it <= uk }
+            // Для наиб
+            val first = linearInterpolate(
+                left = ukListForF2[leftUk],
+                right = ukListForF2[rightUk],
+                target = uk,
+                targetLeft = dataF2[leftDegrees][leftUk].second,
+                targetRight = dataF2[leftDegrees][rightUk].second
+            )
+            // Для наим
+            val second = linearInterpolate(
+                left = ukListForF2[leftUk],
+                right = ukListForF2[rightUk],
+                target = uk,
+                targetLeft = dataF2[rightDegrees][leftUk].second,
+                targetRight = dataF2[rightDegrees][rightUk].second
+            )
+            val third = linearInterpolate(
+                left = degreesListForF2[rightDegrees],
+                right = degreesListForF2[leftDegrees],
+                target = ok,
+                targetLeft = second,
+                targetRight = first
+            )
+            return third
+        } catch (e: Exception) {
+            throw Exception(
+                """
+                1) Проверьте правильность введённых данных
+                2) Нагрузка на мидель вводится домноженная на 10^3
+                3) Напишите об этом мне
+            """.trimIndent()
+            )
+        }
     }
 
     private val degreesListForF2 = listOf(10.0, 30.0, 40.0, 50.0, 60.0, 70.0)
@@ -359,56 +397,67 @@ object Tables {
     )
 
     fun getF4(uk: Double, ok: Double): Double {
-        // находим меньший градус
-        val rightDegrees = degreesListForF4.lastIndex - degreesListForF4.reversed().indexOfFirst { it <= ok }
-        // находим больший градус
-        val leftDegrees = degreesListForF4.indexOfFirst { it >= ok }
-        val rightUk = ukListForF4.indexOfFirst { it >= uk }
-        val leftUk = ukListForF4.lastIndex - ukListForF4.reversed().indexOfFirst { it <= uk }
-        // интерполяция для большего градуса
-        val first = linearInterpolate(
-            left = ukListForF4[leftUk],
-            right = ukListForF4[rightUk],
-            target = uk,
-            targetLeft = dataF4[leftDegrees][leftUk].second,
-            targetRight = dataF4[leftDegrees][rightUk].second
-        )
-        // интерполяция для меньшего градуса
-        val second = linearInterpolate(
-            left = ukListForF4[leftUk],
-            right = ukListForF4[rightUk],
-            target = uk,
-            targetLeft = dataF4[rightDegrees][leftUk].second,
-            targetRight = dataF4[rightDegrees][rightUk].second
-        )
-        if (ok in 10.0 .. 30.0) {
-            val result = if (uk <= 0.5) {
-                linearInterpolate(
-                    left = degreesListForF4[rightDegrees],
-                    right = degreesListForF4[leftDegrees],
-                    target = ok,
-                    targetLeft = first,
-                    targetRight = second
-                )
-            } else {
-                linearInterpolate(
-                    left = degreesListForF4[rightDegrees],
-                    right = degreesListForF4[leftDegrees],
-                    target = ok,
-                    targetLeft = second,
-                    targetRight = first
-                )
+        try {
+            // находим меньший градус
+            val rightDegrees =
+                degreesListForF4.lastIndex - degreesListForF4.reversed().indexOfFirst { it <= ok }
+            // находим больший градус
+            val leftDegrees = degreesListForF4.indexOfFirst { it >= ok }
+            val rightUk = ukListForF4.indexOfFirst { it >= uk }
+            val leftUk = ukListForF4.lastIndex - ukListForF4.reversed().indexOfFirst { it <= uk }
+            // интерполяция для большего градуса
+            val first = linearInterpolate(
+                left = ukListForF4[leftUk],
+                right = ukListForF4[rightUk],
+                target = uk,
+                targetLeft = dataF4[leftDegrees][leftUk].second,
+                targetRight = dataF4[leftDegrees][rightUk].second
+            )
+            // интерполяция для меньшего градуса
+            val second = linearInterpolate(
+                left = ukListForF4[leftUk],
+                right = ukListForF4[rightUk],
+                target = uk,
+                targetLeft = dataF4[rightDegrees][leftUk].second,
+                targetRight = dataF4[rightDegrees][rightUk].second
+            )
+            if (ok in 10.0..30.0) {
+                val result = if (uk <= 0.5) {
+                    linearInterpolate(
+                        left = degreesListForF4[rightDegrees],
+                        right = degreesListForF4[leftDegrees],
+                        target = ok,
+                        targetLeft = first,
+                        targetRight = second
+                    )
+                } else {
+                    linearInterpolate(
+                        left = degreesListForF4[rightDegrees],
+                        right = degreesListForF4[leftDegrees],
+                        target = ok,
+                        targetLeft = second,
+                        targetRight = first
+                    )
+                }
+                return result
             }
-            return result
+            val third = linearInterpolate(
+                left = degreesListForF4[rightDegrees],
+                right = degreesListForF4[leftDegrees],
+                target = ok,
+                targetLeft = second,
+                targetRight = first
+            )
+            return third
+        } catch (e: Exception) {
+            throw Exception(
+                """
+                1) Проверьте правильность введённых данных
+                2) Нагрузка на мидель вводится домноженная на 10^3
+                3) Напишите об этом мне
+            """.trimIndent()
+            )
         }
-        val third = linearInterpolate(
-            left = degreesListForF4[rightDegrees],
-            right = degreesListForF4[leftDegrees],
-            target = ok,
-            targetLeft = second,
-            targetRight = first
-        )
-        return third
     }
 
     private val degreesListForF4 = listOf(10.0, 30.0, 50.0, 70.0)
@@ -468,7 +517,7 @@ object Tables {
     fun getBi(thrust: Double): Double {
         if (thrust < 0) error("Тяга меньше нуля")
         if (thrust >= 1600) return 0.00665
-        val x0 = biData.indexOfFirst { it.first <= thrust }
+        val x0 = biData.size - 1 - biData.reversed().indexOfFirst { it.first <= thrust }
         val x1 = biData.indexOfFirst { it.first >= thrust }
         return linearInterpolate(
             left = biData[x0].first,
@@ -490,7 +539,7 @@ object Tables {
     fun getNi(m0: Double): Double {
         if (m0 < 0) error("m0 меньше нуля")
         if (m0 >= 150.0) return 0.0102
-        val x0 = niData.indexOfFirst { it.first <= m0 }
+        val x0 = niData.size - 1 - niData.reversed().indexOfFirst { it.first <= m0 }
         val x1 = niData.indexOfFirst { it.first >= m0 }
         return linearInterpolate(
             left = niData[x0].first,
@@ -514,7 +563,7 @@ object Tables {
     fun getMiddleDensity(omega: Double): Double {
         if (omega < 0) error("m0 меньше нуля")
         if (omega >= 80.0) return 25.0
-        val x0 = middleDensityData.indexOfFirst { it.first <= omega }
+        val x0 = middleDensityData.size - 1 - middleDensityData.reversed().indexOfFirst { it.first <= omega }
         val x1 = middleDensityData.indexOfFirst { it.first >= omega }
         return linearInterpolate(
             left = middleDensityData[x0].first,
@@ -537,7 +586,7 @@ object Tables {
     fun getAlpha(omega: Double): Double {
         if (omega < 0) error("m0 меньше нуля")
         if (omega >= 80.0) return 0.01388
-        val x0 = alphaData.indexOfFirst { it.first <= omega }
+        val x0 = alphaData.size - 1 - alphaData.reversed().indexOfFirst { it.first <= omega }
         val x1 = alphaData.indexOfFirst { it.first >= omega }
         return linearInterpolate(
             left = alphaData[x0].first,

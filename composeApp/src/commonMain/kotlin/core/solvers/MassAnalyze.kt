@@ -5,6 +5,7 @@ import core.objects.Constants
 import core.objects.Fuels
 import core.objects.tables.Tables
 import kotlin.math.abs
+import kotlin.math.pow
 
 data class MassAnalyze(
     val mass: Double,

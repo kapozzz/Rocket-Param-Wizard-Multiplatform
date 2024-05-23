@@ -36,19 +36,19 @@ fun MassAnalyzeScreen() {
     val solvesState = LocalSolvesState.current
     val scrollState = rememberScrollState()
 
-    val secondHigh = remember { mutableStateOf(42.0) }
-    val secondLow = remember { mutableStateOf(8.0) }
-    val firstHigh = remember { mutableStateOf(130.0) }
-    val firstLow = remember { mutableStateOf(14.0) }
+    val secondHigh = remember { mutableStateOf(40.0) }
+    val secondLow = remember { mutableStateOf(14.0) }
+    val firstHigh = remember { mutableStateOf(140.0) }
+    val firstLow = remember { mutableStateOf(30.0) }
 
     val analyzer = remember {
         mutableStateOf(
             MassAnalyzer(
                 solvesState = solvesState,
-                firstInFirstStage = 14.0,
-                secondInFirstStage = 130.0,
-                firstInSecondStage = 8.0,
-                secondInSecondStage = 42.0
+                firstInFirstStage = 30.0,
+                secondInFirstStage = 140.0,
+                firstInSecondStage = 14.0,
+                secondInSecondStage = 40.0
             )
         )
     }
@@ -261,6 +261,56 @@ fun MassAnalyzeScreen() {
                         .fillMaxWidth()
                         .padding(start = 16.dp, bottom = 22.dp)
                 )
+                with(analyzer.value.secondStageResult!!) {
+                    ParametersViewer(
+                        "Массовый анализ результат для 2 ступени",
+                        Pair("Начальная масса ступени", "${m0}[т]"),
+                        Pair("Масса ракетного блока", "${massOfRocketBlock}[т]"),
+                        Pair("Тяга двигателей ступеней в пустоте", "${specificGravityInVoid}[кН]"),
+                        Pair("Рабочий запас топлива", "${omega}[т]"),
+                        Pair("Коэффициент, характеризующий степень совершенства системы питания двигателя", "$alphaOmega"),
+                        Pair("Неиспользованный запас топлива", "${deltaOmega}[т]"),
+                        Pair("Масса заправки топливом ступени", "${omegaGasProcess}[т]"),
+                        Pair("Масса окислителя ступени", "${omegaOxidant}[т]"),
+                        Pair("Масса горючего ступени", "${omegaFuel}[т]"),
+                        Pair("Масса топливного отсека", "${massOfFuelPart}[т]"),
+                        Pair("Средняя плотность конструкции топливного отсека", "${middleDensity}[кг/м^3]"),
+                        Pair("Коэффициент, характеризующий степень совершенства системы питания двигателя", "${alphaOmega}[т]"),
+                        Pair("Конструктивный коэффициент ", "${Ni}[т]"),
+                        Pair("Коэффициент, характеризующий отношение средней плотности конструкции топливного отсека к средней плотности топлива", "${alphaTo}[т]"),
+                        Pair("Масса двигательной установки второй ступени", "${massOfEngine}[т]"),
+                        Pair("Коэффициент «удельного веса» двигателей", "${bi}"),
+                        Pair("Масса хвостового и приборного отсеков второй ступени", "${massOfDevicesAndTailPart}[т]"),
+                        Pair("Масса сухой конструкции ступени", "${massOfDryConstruction}[т]"),
+                        Pair("Введенный коэффициент N", "${definedN}[т]"),
+                        Pair("Введенный коэффициент K", "${definedK}[т]"),
+                    )
+                }
+                with(analyzer.value.firstStageResult!!) {
+                    ParametersViewer(
+                        "Массовый анализ результат для 1 ступени",
+                        Pair("Начальная масса ступени", "${m0}[т]"),
+                        Pair("Масса ракетного блока", "${massOfRocketBlock}[т]"),
+                        Pair("Тяга двигателей ступеней в пустоте", "${specificGravityInVoid}[кН]"),
+                        Pair("Рабочий запас топлива", "${omega}[т]"),
+                        Pair("Коэффициент, характеризующий степень совершенства системы питания двигателя", "$alphaOmega"),
+                        Pair("Неиспользованный запас топлива", "${deltaOmega}[т]"),
+                        Pair("Масса заправки топливом ступени", "${omegaGasProcess}[т]"),
+                        Pair("Масса окислителя ступени", "${omegaOxidant}[т]"),
+                        Pair("Масса горючего ступени", "${omegaFuel}[т]"),
+                        Pair("Масса топливного отсека", "${massOfFuelPart}[т]"),
+                        Pair("Средняя плотность конструкции топливного отсека", "${middleDensity}[кг/м^3]"),
+                        Pair("Коэффициент, характеризующий степень совершенства системы питания двигателя", "${alphaOmega}[т]"),
+                        Pair("Конструктивный коэффициент ", "${Ni}[т]"),
+                        Pair("Коэффициент, характеризующий отношение средней плотности конструкции топливного отсека к средней плотности топлива", "${alphaTo}[т]"),
+                        Pair("Масса двигательной установки второй ступени", "${massOfEngine}[т]"),
+                        Pair("Коэффициент «удельного веса» двигателей", "${bi}"),
+                        Pair("Масса хвостового и приборного отсеков второй ступени", "${massOfDevicesAndTailPart}[т]"),
+                        Pair("Масса сухой конструкции ступени", "${massOfDryConstruction}[т]"),
+                        Pair("Введенный коэффициент N", "${definedN}[т]"),
+                        Pair("Введенный коэффициент K", "${definedK}[т]"),
+                    )
+                }
             }
 //            IconButton(
 //                {

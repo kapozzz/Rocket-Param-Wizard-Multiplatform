@@ -19,6 +19,8 @@ data class MassAnalyzer(
 
     var definedMassFirst = 0.0
     var definedMassSecond = 0.0
+    var firstStageResult: MassOfEachPart? = null
+    var secondStageResult: MassOfEachPart? = null
 
     init {
         start()
@@ -71,5 +73,26 @@ data class MassAnalyzer(
         fourth = b.second
         definedMassSecond =
             third.mass + abs(third.different) * (fourth.mass - third.mass) / (fourth.different - third.different)
+        val m02 =
+            first.mass + abs(first.different) * (second.mass - first.mass) /
+                    (second.different - first.different)
+        secondStageResult = MassOfEachPart(
+            m0 = m02,
+            payloadWeight = solvesState.projectParams.value.payloadWeight * 10.0.pow(-3),
+            definedDesign = solvesState.definedDesign,
+            initialThrustCapacityOfTheRocket = solvesState.projectParams.value.initialThrustCapacityOfTheRocket.second,
+            fuel = solvesState.fuel.value,
+            reducedPropellantFillFactor = solvesState.definedDesign.reducedPropellantFillFactorForSecondStage
+        )
+        val m01 =
+            third.mass + abs(third.different)*(fourth.mass-third.mass)/(fourth.different-third.different)
+        firstStageResult = MassOfEachPart(
+            m0 = m01,
+            payloadWeight = m02,
+            definedDesign = solvesState.definedDesign,
+            initialThrustCapacityOfTheRocket = solvesState.determination.value.firstStageThrustCapacityInVoid,
+            fuel = solvesState.fuel.value,
+            reducedPropellantFillFactor = solvesState.definedDesign.reducedPropellantFillFactorForFirstStage
+        )
     }
 }

@@ -25,6 +25,7 @@ import common.ui.theme.LocalNavigator
 import common.ui.theme.LocalSolvesState
 import common.ui.theme.LocalTheme
 import core.objects.Fuels
+import kotlin.math.pow
 
 @Composable
 fun MainScreen() {
