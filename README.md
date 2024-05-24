@@ -10,6 +10,5 @@
 
 ## Скачать:
 
-### [**Windows**](https://github.com/kapozzz/RocketParamWizardMultiplatform/raw/master/windows_release/org.kapozzz.rpw.rar)
-
-
+### [**Windows**](https://github.com/kapozzz/RocketParamWizardMultiplatform/raw/master/builds/org.kapozzz.rpw.rar)
+### [**Android**](https://github.com/kapozzz/RocketParamWizardMultiplatform/raw/master/builds/RPW.apk)
